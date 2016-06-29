@@ -1,14 +1,10 @@
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.OpenInteractive.SKNEvent" version="1.0.0">
   <name>SKNEvents</name>
-  <description>Shows events for the government of St. Kitts & Nevis</description>
+  <description>Shows events for the government of St. Kitts and Nevis.</description>
   <author href="http://phonegap.com" email="support@phonegap.com">PhoneGap Team</author>
   <content src="index.html"/>
   <preference name="DisallowOverscroll" value="true"/>
-  <preference name="SplashScreenDelay" value="3000" />
-  <preference name="SplashShowOnlyFirstTime" value="true" />
-  <preference name="SplashMaintainAspectRatio" value="true" />
   <preference name="android-minSdkVersion" value="14"/>
-  <preference name="android-build-tool" value="gradle" />
   <plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1"/>
   <plugin name="cordova-plugin-camera" source="npm" spec="~2.1.1"/>
   <plugin name="cordova-plugin-media-capture" source="npm" spec="~1.2.0"/>
