@@ -11,10 +11,6 @@ function TakePic(){
     }
 }
 
-function AddEvent(){
-    
-}
-
 function getQueryVariable(parameter){
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
@@ -32,80 +28,15 @@ var loading = function() {
 	'</div>';
 	$(over).appendTo('body');
 
-	// click on the overlay to remove it
-	//$('#overlay').click(function() {
-	//    $(this).remove();
-	//});
+	//click on the overlay to remove it
+	$('#overlay').click(function() {
+	   $(this).remove();
+	});
 
-	// hit escape to close the overlay
-	//$(document).keyup(function(e) {
-	//	if (e.which === 27) {
-	//		$('#overlay').remove();
-	//	}
-	//});
 };
 
 var EventTitle = getQueryVariable('Title'),
 	EventTitle = decodeURI(EventTitle);
-
-// var LoadContent = $.ajax({
-// 	url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
-// 	data: {searchtitle : EventTitle},
-// 	xhrFields: {
-// 	// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-// 	// This can be used to set the 'withCredentials' property.
-// 	// Set the value to 'true' if you'd like to pass cookies to the server.
-// 	// If this is enabled, your server must respond with the header
-// 	// 'Access-Control-Allow-Credentials: true'.
-// 	withCredentials: true
-// },
-// }).then(function(data) {
-// 	var totalrec = data.eventsObjects.length,
-// 		finishid = PerPage - 1,
-// 		PerPage = 10,
-// 		Pages = totalrec / PerPage;
-
-// 	for (var i = 1; i <= Pages; i++) {
-// 		$('.Pages').append('<li><a id="'+i+'" class="PageClickOff">'+i+'</a></li>');
-// 	};
-
-// 	for (var i = 0; i < totalrec; i++) {
-// 		alert(totalrec);
-// 		var title = data.eventsObjects[i].title,
-// 		EventDate = new Date(data.eventsObjects[i].startDate),
-// 		EventDate = EventDate.toDateString(),
-// 		Details = data.eventsObjects[i].pageContent,
-// 		Category = data.eventsObjects[i].eventCategory,
-// 		EventImg = data.eventsObjects[i].flyerFull;
-
-// 		if (data.eventsObjects[i].endDate != null) {
-//         	var EndDate = new Date(data.eventsObjects[i].endDate),
-//         		EndDate = EndDate.toDateString(),
-//         		Blank = ' - ',
-//         		DateDisplay = EventDate.concat(Blank,EndDate);
-//         }
-//         else{
-//         	DateDisplay = EventDate;
-//         }
-
-// 		$('.listitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
-
-// 		if(i == finishid){
-// 			$('#overlay').remove();
-// 			//alert('done');
-// 		}
-// 	};
-// });
-
-// $(document).on("pageshow",function(){
-// 	//alert('page show');
-// 	if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
-// 		$("body").on("swipeleft",function(){
-// 			//alert('swipe left');
-//             $( "#myPanel" ).panel( "open" );
-// 		});
-//     }
-// });	
 
 //Menu Items
 $(document).on("pageshow",function(){
@@ -133,6 +64,7 @@ $(document).on("pageshow",function(){
 
 
 	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright 2016 &copy;");
+
 });
 
 //Details Page
@@ -191,11 +123,24 @@ $(document).on("pageshow","#detailspage",function(){
 			$('.Departments').append(EventDeps);
 			$('.EventFlyer').attr('src', EventImg);
 
-			if(i == finishid){
-				$('#overlay').remove();
-			}
 		};
+
+		$('#overlay').remove();
 	});
+
+	// function AddToCal(){
+	// 	// prep some variables
+	// 	var startDate = new Date(2016,6,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
+	// 	var endDate = new Date(2016,6,15,30,30,0,0,0);
+	// 	var title = "My nice event";
+	// 	var location = "Home";
+	// 	var notes = "Some notes about this event.";
+	// 	var success = function(message) { alert("Success: " + JSON.stringify(message)); };
+	// 	var error = function(message) { alert("Error: " + message); };
+
+	// 	// create an event silently (on Android < 4 an interactive dialog is shown)
+	// 	window.plugins.calendar.createEvent(title,location,notes,startDate,endDate,success,error);
+	// }
 });
 //FeaturedEvents
 $(document).on("pageshow","#FeaturedEvents",function(){
@@ -247,11 +192,10 @@ $(document).on("pageshow","#FeaturedEvents",function(){
 
 			$('.featlistwhole').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 
-			if(i == finishid){
-				$('#overlay').remove();
-				//alert('done');
-			}
+			
 		};
+
+		$('#overlay').remove();
 	});
 
 	//$(document).ready(LoadContent);
@@ -290,7 +234,16 @@ $(document).on("pageshow","#AllEvents",function(){
 
 		function Showmore(amount){
 			var run = 'true';
+			var EndTo = amount + PerPage;
+
+			if(EndTo > totalrec){
+				var sub = EndTo - totalrec;
+					PerPage = PerPage  - sub;
+			}
+
+			if(amount > totalrec){run = 'false';}
 			if(run == 'true'){
+				//alert('run');
 				for (var i = 0; i < PerPage; i++) {
 					//alert(totalrec);
 					var title = data.eventsObjects[amount].title,
@@ -312,29 +265,31 @@ $(document).on("pageshow","#AllEvents",function(){
 
 					$('.Eventlistitems').append('<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 
-					if(i == finishid){
-						$('#overlay').remove();
-						//alert('done');
-					}
+					
 
 					var amount = amount + 1;
 				};
+
+				$('#overlay').remove();
 			}
 
 			
 		}
 
-		$(document).bind("scrollstop", function() {
-			if($(window).scrollTop() + $(window).height() == $(document).height()) {
-				alert("end of page");
+		var ActivePageN = $.mobile.activePage.attr('id');
 
-				var Start = $( ".Eventlistitems li" ).length,
-					Start = Start + 1;
+		if(ActivePageN == 'AllEvents'){
+			$(document).bind("scrollstop", function() {
+				if($(window).scrollTop() + $(window).height() == $(document).height()) {
+					//alert("end of page");
 
-				$(document).ready(Showmore(Start));
-			}
-		});
+					var Start = $( ".Eventlistitems li" ).length,
+						Start = Start + 1;
 
+					$(document).ready(Showmore(Start));
+				}
+			});
+		}
 		
 	});
 
@@ -406,7 +361,7 @@ $(document).on("pageshow","#HomePage",function(){
 				                nextid = id + 1;
 
 				            if($(this).is(':last-child') == false){
-				                $(this).hide("fast", function(){
+				                $(this).fadeOut("fast", function(){
 				                    $(this).next().fadeIn();
 				                });
 				            }
@@ -418,7 +373,7 @@ $(document).on("pageshow","#HomePage",function(){
 				                nextid = id + 1;
 
 				            if($(this).is(':first-child') == false){
-				                $(this).hide("fast", function(){
+				                $(this).fadeOut("fast", function(){
 				                    $(this).prev().fadeIn();
 				                });
 				            }
@@ -453,34 +408,9 @@ $(document).on("pageshow","#HomePage",function(){
 	            
 	            $('.listitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 	            
-	            if(i == finishid){
-	                $('#overlay').remove();
-	                //alert('done');
-	          //       $(".featlistitems").on("swipeleft",function(){
-			        //     var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
-			        //         id = this.id,
-			        //         nextid = id + 1;
-
-			        //     if($(this).is(':last-child') == false){
-			        //         $(this).hide("fast", function(){
-			        //             $(this).next().fadeIn();
-			        //         });
-			        //     }
-			        // });
-
-			        // $(".featlistitems").on("swiperight",function(){
-			        //     var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
-			        //         id = this.id,
-			        //         nextid = id + 1;
-
-			        //     if($(this).is(':first-child') == false){
-			        //         $(this).hide("fast", function(){
-			        //             $(this).prev().fadeIn();
-			        //         });
-			        //     }
-			        // });
-	            }
 	        };
+
+	        $('#overlay').remove();
 	    });
 	}
 });
@@ -516,11 +446,10 @@ $(document).on("pageshow","#Categories",function(){
             
             $('.Catslistitems').append('<li><a href="groupevents.html?CatType=Categories&Cats='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>');
             
-            if(i == finishid){
-                $('#overlay').remove();
-                //alert('done');
-            }
+            
         };
+
+        $('#overlay').remove();
     });
 });
 
@@ -544,23 +473,55 @@ $(document).on("pageshow","#Departments",function(){
             withCredentials: true
         },
     }).then(function(data) {
-        var totalrec = data.departments.length;
-        /*if(totalrec > 10){
-            var totalrec = 10;
-        }*/
-        var finishid = totalrec - 1;
-        for (var i = 0; i < totalrec; i++) {
-            var title = data.departments[i].name,
-                Descr = data.departments[i].summary;
-                
-            
-            $('.DepartmentListing').append('<li><a href="groupevents.html?CatType=Departments&Dep='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>');
+        var totalrec = data.departments.length,
+        	PerPage = 20,
+			finishid = PerPage - 1,
+			Start = 0;
 
-            if(i == finishid){
-                $('#overlay').remove();
-                //alert('done');
-            }
-        };
+		$(document).ready(Showmore(Start));
+
+		function Showmore(amount){
+			var run = 'true';
+			var EndTo = amount + PerPage;
+
+			if(EndTo > totalrec){
+				var sub = EndTo - totalrec;
+					PerPage = PerPage  - sub;
+			}
+
+			if(amount > totalrec){run = 'false';}
+			if(run == 'true'){
+				//alert('run');
+				for (var i = 0; i < PerPage; i++) {
+		            var title = data.departments[amount].name,
+		                Descr = data.departments[amount].summary;
+		                
+		            
+		            $('.DepartmentListing').append('<li><a href="groupevents.html?CatType=Departments&Dep='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>');
+
+		            var amount = amount + 1;
+		        };
+
+				$('#overlay').remove();
+			}
+
+			
+		}
+
+		var ActivePageN = $.mobile.activePage.attr('id');
+
+		if(ActivePageN == 'Departments'){
+			$(document).bind("scrollstop", function() {
+				if($(window).scrollTop() + $(window).height() == $(document).height()) {
+					//alert("end of page");
+
+					var Start = $( ".DepartmentListing li" ).length,
+						Start = Start + 1;
+
+					$(document).ready(Showmore(Start));
+				}
+			});
+		}
     });
 });
 
@@ -583,23 +544,58 @@ $(document).on("pageshow","#Ministries",function(){
             withCredentials: true
         },
     }).then(function(data) {
-        var totalrec = data.ministries.length;
-        /*if(totalrec > 10){
-            var totalrec = 10;
-        }*/
-        var finishid = totalrec - 1;
-        for (var i = 0; i < totalrec; i++) {
-            var title = data.ministries[i].name,
-                Descr = data.ministries[i].summary;
-                
-            
-            $('.MinistryListingPH').append('<li><a href="groupevents.html?CatType=Ministries&Min='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>');
+        var totalrec = data.ministries.length,
+        	PerPage = 20,
+			finishid = PerPage - 1,
+			Start = 0;
 
-            if(i == finishid){
-                $('#overlay').remove();
-                //alert('done');
-            }
-        };
+		$(document).ready(Showmore(Start));
+
+		function Showmore(amount){
+			var run = 'true';
+			var EndTo = amount + PerPage;
+
+			if(EndTo > totalrec){
+				var sub = EndTo - totalrec;
+					PerPage = PerPage  - sub;
+			}
+
+			if(amount > totalrec){run = 'false';}
+			if(run == 'true'){
+				//alert('run');
+				for (var i = 0; i < PerPage; i++) {
+		            var title = data.ministries[amount].name,
+		                Descr = data.ministries[amount].summary;
+		                
+		            
+		            $('.MinistryListingPH').append('<li><a href="groupevents.html?CatType=Ministries&Min='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>');
+
+		            
+
+		            var amount = amount + 1;
+		        };
+
+		        $('#overlay').remove();
+				
+			}
+
+			
+		}
+
+		var ActivePageN = $.mobile.activePage.attr('id');
+
+		if(ActivePageN == 'Ministries'){
+			$(document).bind("scrollstop", function() {
+				if($(window).scrollTop() + $(window).height() == $(document).height()) {
+					//alert("end of page");
+
+					var Start = $( ".MinistryListingPH li" ).length,
+						Start = Start + 1;
+
+					$(document).ready(Showmore(Start));
+				}
+			});
+		}
     });
 });
 
@@ -678,10 +674,10 @@ $(document).on("pageshow","#GroupEvents",function(){
 
 				$('.GroupEventlistitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 
-				if(i == finishid){
-					$('#overlay').remove();
-				}
+				
 			};
+
+			$('#overlay').remove();
 		}
 	});
 });
@@ -717,7 +713,7 @@ $(document).on("pageshow","#CalendarView",function(){
 		var finishid = totalrec - 1;
 
 		var CalDataString = null;
-		
+		var events = [];
 		for (var i = 0; i < totalrec; i++) {
 			//if(i == 0){var CalDataString = '['}
 			
@@ -725,20 +721,26 @@ $(document).on("pageshow","#CalendarView",function(){
 			EventDate = formatDate(data.eventsObjects[i].startDate);
 
 			if (data.eventsObjects[i].endDate != null) {
-            	var EndDate = new Date(data.eventsObjects[i].endDate),
-            		EndDate = EndDate.toDateString();
+            	var EndDate = formatDate(data.eventsObjects[i].endDate);
+            		//EndDate = EndDate.toDateString();
             }
             else{
-            	DateDisplay = EventDate;
+            	var EndDate = '';
             }
 
-			if(i == finishid){
-				CalDataString = CalDataString + '{ title: "'+title+'", start: "'+EventDate+'" }';	
-				//$('#testzzz').append(CalDataString);
-			}	
-			else{
-				CalDataString = CalDataString + '{ title: "'+title+'", start: "'+EventDate+'"},';	
-			}
+			// if(i == finishid){
+			// 	CalDataString = CalDataString + '{ title: '+title+', start: '+EventDate+' }';	
+			// 	//$('#testzzz').append(CalDataString);
+			// }	
+			// else{
+			// 	CalDataString = CalDataString + '{ title: '+title+', start: '+EventDate+'},';	
+			// }
+
+			events.push({
+                title: title,
+                start: EventDate,
+                end: EndDate
+            });
 
 		};
 
@@ -762,7 +764,7 @@ $(document).on("pageshow","#CalendarView",function(){
 				},
 	            editable: false,
 	            eventLimit: true, // allow "more" link when too many events
-	            events: [{ title: "Agriculture open day 2016", start: "2016-03-17"},{ title: "Annual planning and review meeting.... adam", start: "2016-03-24"},{ title: "Annual tree planting", start: "2016-09-17"},{ title: "Blood Drive", start: "2016-06-11"},{ title: "Breast Feeding Week", start: "2016-08-01"},{ title: "Christmas Day", start: "2015-12-25"},{ title: "Class Begins", start: "2016-10-07"},{ title: "Commencement of Heats", start: "2016-01-11"},{ title: "Commonwealth Day Programme", start: "2016-03-14"},{ title: "Community Outreach", start: "2016-01-29"},{ title: "Eat local day", start: "2016-07-01"},{ title: "End of Term Test - St. Pauls Primary School", start: "2016-03-21"},{ title: "FAO World food day", start: "2016-10-24"},{ title: "Fishers and Farmers annual prize giving ceremony", start: "2016-10-01"},{ title: "Free Eye Screening", start: "2016-10-14"},{ title: "Fun Biking", start: "2016-03-06"},{ title: "Grade 6 Quiz - Dr. william Connor Primary", start: "2016-06-02"},{ title: "GradeSic Parents' Meeting (Test of Standard)", start: "2016-04-21"},{ title: "Graduation", start: "2016-07-04"},{ title: "Graduation", start: "2016-07-05"},{ title: "Graduation -", start: "2016-07-05"},{ title: "Holiday - Whit Monday", start: "2016-05-30"},{ title: "Independence Blood Drive", start: "2016-09-10"},{ title: "Internantional Day of Parents", start: "2016-06-01"},{ title: "International Day for Eliminating Violence to Women", start: "2016-11-25"},{ title: "International Day for the Eradication of Poverty", start: "2016-10-17"},{ title: "International Day of Families", start: "2016-05-15"},{ title: "International Day of Older Persons", start: "2016-10-01"},{ title: "International Day of Persons with Disabilities", start: "2015-12-03"},{ title: "International Human Rights Day", start: "2015-12-10"},{ title: "International Men's Day", start: "2016-10-19"},{ title: "International Testing Day", start: "2016-06-24"},{ title: "International Women's Day", start: "2016-03-08"},{ title: "Laboratory Professionals Week", start: "2016-04-25"},{ title: "Last Lap", start: "2016-01-02"},{ title: "Legal Aid Clinic", start: "2016-02-15"},{ title: "Legal Aid Clinic", start: "2016-03-15"},{ title: "Legal Aid Clinic", start: "2016-04-14"},{ title: "Medal Presentation - Dr. William Connor Primary", start: "2016-03-30"},{ title: "Medals and Trophies Presentation", start: "2016-05-13"},{ title: "National Testing Day", start: "2016-12-16"},{ title: "New Years Day", start: "2016-01-01"},{ title: "NO VAT on commercial vehicles", start: "2016-11-11"},{ title: "Nurses Day", start: "2016-05-12"},{ title: "Nurses Week", start: "2016-05-08"},{ title: "OAS Regional National Drug Policy Workshop", start: "1969-12-31"},{ title: "Port State Annual Meeting", start: "1969-12-31"},{ title: "Port State Annual Training", start: "1969-12-31"},{ title: "Primary Schools Championship", start: "2016-03-12"},{ title: "Primary Schools Championship", start: "2016-03-13"},{ title: "Prize Giving", start: "2016-07-06"},{ title: "Road Safety Summit", start: "2015-11-27"},{ title: "School Closes", start: "2016-07-08"},{ title: "School Closes (All Schools)", start: "2016-04-01"},{ title: "School Reopens", start: "2016-01-04"},{ title: "School Re-opens", start: "2016-04-18"},{ title: "Sports Day- Dr. William Connor Primary", start: "2016-02-25"},{ title: "Sports Day St. Pauls Primary School", start: "2016-03-05"},{ title: "Staff Development (Language Resourced Teacher)", start: "2016-02-10"},{ title: "Staff Development (Mathematics Resourced Teacher)", start: "2016-01-28"},{ title: "Staff Development (Science Resourced Teacher)", start: "2016-02-04"},{ title: "Staff Development (Social Studies)", start: "2016-04-28"},{ title: "Staff Development (Social Studies Resourced Teacher)", start: "2016-02-18"},{ title: "Steeple Chase", start: "2016-02-19"},{ title: "Steeple Chase/Cross Country", start: "2016-02-19"},{ title: "Sugar Mass Blood Drive", start: "2016-12-10"},{ title: "Surgical Ward Symposium", start: "1969-12-31"},{ title: "test event", start: "2016-03-19"},{ title: "test Event", start: "2016-03-09"},{ title: "Testing event", start: "2016-02-13"},{ title: "Testing featured event", start: "2016-02-13"},{ title: "Test of Standards (Language Arts)", start: "2016-06-07"},{ title: "Test of Standards ( Mathematics)", start: "2016-06-09"},{ title: "Test of Standards (Science)", start: "2016-06-15"},{ title: "Test of Standards (Social Studies)", start: "2016-06-14"},{ title: "Training and Certification of Programme for Drug and Violence Prevention, Treatment and Rehabilitation", start: "2016-02-13"},{ title: "Universal Children's Day", start: "2016-11-20"},{ title: "Vacation Week of the Americas", start: "2016-04-23"},{ title: "Walk-A-Thon", start: "2016-02-12"},{ title: "Walk to Learn", start: "2016-05-06"},{ title: "Wellness Week", start: "2016-09-12"},{ title: "World Aids Day", start: "2016-12-01"},{ title: "World Aids Day March", start: "2016-12-02"},{ title: "World Cancer Day", start: "2016-02-04"},{ title: "World Diabetes Day", start: "2016-11-14"},{ title: "World Environmental Health Day", start: "2016-06-05"},{ title: "World Fight Day", start: "2016-10-12"},{ title: "World Glaucoma Day", start: "2016-03-12"},{ title: "World Glaucoma Week of Activities", start: "2016-03-06"},{ title: "World Health Day", start: "2016-04-07"},{ title: "World Hepatitis Day", start: "2016-07-28"},{ title: "World Hypertension Day", start: "2016-05-17"},{ title: "World Maritime Day", start: "1969-12-31"},{ title: "World Mental Health Day", start: "2016-10-10"},{ title: "World Polio Day", start: "2016-10-24"},{ title: "World Post Day", start: "2016-10-09"},{ title: "World TB Day", start: "2016-03-24"},{ title: "World Water Day", start: "2016-03-22" }],
+	            events: events,
 	            eventBackgroundColor: 'black', 
                 eventTextColor: 'white'
 	        });
@@ -798,39 +800,79 @@ $(document).on("pageshow","#SearchEvents",function(){
 	},
 	}).then(function(data) {
 		var totalrec = data.eventsObjects.length;
-
-		var finishid = totalrec - 1;
+		if(PerPage > totalrec){
+			var PerPage = totalrec;
+		}
+		else{
+			var PerPage = 20;
+		}
+		var	finishid = PerPage - 1,
+			Start = 0;
 
 		$('.ResultHeader').append('Showing results for "'+EventTitle+'"');
-		
+
+
 		if(totalrec == 0){
 			$('.resultlistitems').append('<li><a href="" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>No Events</h3></a></li>');
 			$('#overlay').remove();
 		}
 		else{
-			for (var i = 0; i < totalrec; i++) {
-				var title = data.eventsObjects[i].title,
-				EventDate = new Date(data.eventsObjects[i].startDate),
-				EventDate = EventDate.toDateString();
+			$(document).ready(Showmore(Start));
+		}
 
-				//alert(EventMins);
-				//alert(EventDeps);
-				if (data.eventsObjects[i].endDate != null) {
-	            	var EndDate = new Date(data.eventsObjects[i].endDate),
-	            		EndDate = EndDate.toDateString(),
-	            		Blank = ' - ',
-	            		DateDisplay = EventDate.concat(Blank,EndDate);
-	            }
-	            else{
-	            	DateDisplay = EventDate;
-	            }
+		function Showmore(amount){
+			var run = 'true';
+			var EndTo = amount + PerPage;
 
-				$('.resultlistitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
+			if(EndTo > totalrec){
+				var sub = EndTo - totalrec;
+					PerPage = PerPage  - sub;
+			}
 
-				if(i == finishid){
-					$('#overlay').remove();
+			if(amount > totalrec){run = 'false';}
+			if(run == 'true'){
+				//alert('run');
+				for (var i = 0; i < PerPage; i++) {
+					var title = data.eventsObjects[amount].title,
+					EventDate = new Date(data.eventsObjects[amount].startDate),
+					EventDate = EventDate.toDateString();
+
+					//alert(EventMins);
+					//alert(EventDeps);
+					if (data.eventsObjects[i].endDate != null) {
+		            	var EndDate = new Date(data.eventsObjects[amount].endDate),
+		            		EndDate = EndDate.toDateString(),
+		            		Blank = ' - ',
+		            		DateDisplay = EventDate.concat(Blank,EndDate);
+		            }
+		            else{
+		            	DateDisplay = EventDate;
+		            }
+
+					$('.resultlistitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
+
+					var amount = amount + 1;
+				};
+
+				$('#overlay').remove();
+			}
+
+			
+		}
+
+		var ActivePageN = $.mobile.activePage.attr('id');
+
+		if(ActivePageN == 'SearchEvents'){
+			$(document).bind("scrollstop", function() {
+				if($(window).scrollTop() + $(window).height() == $(document).height()) {
+					//alert("end of page");
+
+					var Start = $( ".resultlistitems li" ).length,
+						Start = Start + 1;
+
+					$(document).ready(Showmore(Start));
 				}
-			};
+			});
 		}
 	});
 });
