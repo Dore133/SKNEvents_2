@@ -18,8 +18,27 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>    
     <!-- End Jquery Mobile -->
-    <script type="text/javascript" src="js/general.js"></script>
+    <!--<script type="text/javascript" src="js/general.js"></script> -->
     <title>Event Details</title>
+    <script type="text/javascript">
+    $(document).on("pageshow","#detailspage",function(){
+        alert(hi);
+        $( ".AddCal" ).bind( "click", function(event, ui) {
+            alert('clicked');
+          // prep some variables
+            var startDate = new Date(2016,6,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
+            var endDate = new Date(2016,6,15,30,30,0,0,0);
+            var title = "My nice event";
+            var location = "Home";
+            var notes = "Some notes about this event.";
+            var success = function(message) { alert("Success: " + JSON.stringify(message)); };
+            var error = function(message) { alert("Error: " + message); };
+
+            // create an event silently (on Android < 4 an interactive dialog is shown)
+            window.plugins.calendar.createEvent(title,location,notes,startDate,endDate,success,error);
+        });
+    });
+    </script>
 </head>
 
 <body>
@@ -33,23 +52,37 @@
         </div>
 
         <div data-role="header">
-            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Home</a>
-            <h1 class="AppHeader">SKN Events</h1>
-            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-grid ui-shadow ui-btn-icon-left">Menu</a>
+            <h1 class="AppHeader">SKN Government Events</h1>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li class="navbarli"><a class="navbarbtn" href="#HomePage" data-transition="flip" data-icon="home"></a></li>
+                    <li class="navbarli"><a class="navbarbtn" data-transition="slide" data-icon="arrow-l" data-rel="back"></a></li>
+                    <li class="navbarli"><a class="navbarbtn" href="#myPanel" data-transition="flip" data-icon="bars"></a></li>
+                </ul>
+            </div>
         </div>
+        <!-- <div data-role="header">
+            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
+            <h1 class="AppHeader">SKN Government Events</h1>
+            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
+        </div> -->
 
         <div data-role="main" class="ui-content">
-            <a class="ui-btn ui-btn-b" data-rel="back">Go Back</a>
+            
+            <!-- <a class="ui-btn ui-btn-b AddCal">Add to Calendar</a> -->
+          
             <h2 class="EventTitle"></h2>
             <img class="EventFlyer" src="" width="100%" height="200">
             <p><span class="Ministries"></span><span class="Departments"></span></p>
             <p class="EventCategory"></p>
             <p class="EventDetails"></p>
+
         </div>
 
-        <div data-role="footer" class="MyFooter">
+        <div data-role="footer" class="MyFooter" data-position="fixed">
             <h1></h1>
         </div>
+
     </div>
 
 

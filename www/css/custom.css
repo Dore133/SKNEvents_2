@@ -23,17 +23,17 @@
 
 .ui-header{
     height: 45px!important;
-    background-color: #4B5360!important;
-    border-color: #4B5360!important;
+    background-color: #2370DC!important;
+    border-color: #2370DC!important;
 }
 
 .ui-header h1{
-    color: #D6D3D3;
+    color: #fff;
 }
 
 .ui-footer{
-    background-color: rgba(0,0,0,0.68)!important;
-    border-color: rgba(0,0,0,0.68)!important;
+    background-color: #4B5360!important;
+    border-color: #4B5360!important;
 }
 
 .ui-footer h1{
@@ -144,11 +144,11 @@ input.submit {
     border:1px solid #ddd;
     text-align: center;
     padding: 15px;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     background: #f6f6f6;
     height: 200px;
     margin: 0 auto;
-    width: 80%;
+    width: 100%;
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.15);
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,.15);
     box-shadow: 0 1px 3px rgba(0,0,0,.15);
@@ -158,14 +158,86 @@ input.submit {
     display: block;
 }
 
+.featlistpagination li:first-child {
+    display: block;
+}
+.featlistpagination{
+    margin: 0 auto;
+    height: 20px;
+    /* width: 29%; */
+    padding: 0;
+    position: absolute;
+    left: 41%;
+}
+
+.featlistpagination li{
+    list-style: none;
+    float: left;
+    margin-right: 5px;
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+    background-color: #544f4f;
+    /*border: 1px solid #544f4f;*/
+}
+
+.featlistpagination li.active{
+    background-color: #2370DC;
+}
+
+/*.featlistpagination li:first-child {
+    background-color: #2370DC;
+}*/
+
 .featlist {
     padding: 0;
     height: 200px;
+    width: 100%;
+    float: left;
 }
 .catdet{
     font-size: 12px;
     text-align: left!important;
 }
+
+.featlistpaginationph{
+    float: left;
+    width: 100%;
+    padding: 0;
+    height: 20px;
+    position: relative;
+}
+
+/*Calendar*/
+span.fc-title {
+    font-weight: lighter;
+}
+/*end*/
+
+.backbtn{
+    float: left;
+    height: 44px!important;
+}
+
+.backbtnph{
+    width:100%;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.navbarbtn{
+    background-color: #4B5360!important;
+    border-color: #4B5360!important;
+}
+
+.navbarli{
+    border: 1px solid #838b98!important;
+}
+
+.ui-content {
+    width: 100%;
+}
+
 /*.featlistitems{
     height: 150px;
     white-space: nowrap;

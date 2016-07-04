@@ -24,8 +24,8 @@
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>    
     <!-- End Jquery Mobile -->
-    <!--<script type="text/javascript" src="js/getData.js"></script>  -->
-    <script type="text/javascript" src="js/general.js"></script>
+    <!--<script type="text/javascript" src="js/getData.js"></script>
+    <script type="text/javascript" src="js/general.js"></script>  -->
     <title>Events</title>
 </head>
 
@@ -40,20 +40,26 @@
         </div>
 
         <div data-role="header">
-            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Home</a>
-            <h1 class="AppHeader">SKN Events</h1>
-            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-grid ui-shadow ui-btn-icon-left">Menu</a>
+            <h1 class="AppHeader">SKN Government Events</h1>
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li class="navbarli"><a class="navbarbtn" href="#HomePage" data-transition="flip" data-icon="home"></a></li>
+                    <li class="navbarli"><a class="navbarbtn" data-transition="slide" data-icon="arrow-l" data-rel="back"></a></li>
+                    <li class="navbarli"><a class="navbarbtn" href="#myPanel" data-transition="flip" data-icon="bars"></a></li>
+                </ul>
+            </div>
         </div>
 
-        <div data-role="main" class="ui-content">
-            <a class="ui-btn ui-btn-b" data-rel="back">Go Back</a>
-            <h3 class="EventHeader"></h3>
-        </div>
-        
+        <!-- <div data-role="header">
+            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
+            <h1 class="AppHeader">SKN Government Events</h1>
+            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-grid ui-shadow ui-btn-icon-notext">Menu</a>
+        </div> -->
+
         <div class="Listing">
             <div data-role="main" class="ui-content">
                 <!-- <ul class="Pages"><li class="PageListHeader">Pages:</li></ul> -->
-                
+                <h3 class="EventHeader"></h3>
                 <form class="ui-filterable SearchEventsInput">
                     <input id="myFilter" data-type="search" placeholder="Search Events..">
                 </form>
@@ -64,7 +70,7 @@
             </div>
         </div>
 
-        <div data-role="footer" class="MyFooter">
+        <div data-role="footer" class="MyFooter" data-position="fixed">
             <h1></h1>
         </div>
     </div>

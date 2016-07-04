@@ -50,10 +50,9 @@ $(document).on("pageshow",function(){
 
 		MenuItems = '<li><a href="#HomePage" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Home</a></li>';
 		MenuItems = MenuItems + '<li><a href="allevents.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">All Events</a></li>';
-		MenuItems = MenuItems + '<li><a href="categories.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Categories</a></li>';
+		MenuItems = MenuItems + '<li><a href="featuredevents.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Featured Events</a></li>';
 		MenuItems = MenuItems + '<li><a href="ministries.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ministries</a></li>';
 		MenuItems = MenuItems + '<li><a href="departments.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Departments</a></li>';
-		MenuItems = MenuItems + '<li><a href="featuredevents.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Featured Events</a></li>';
 		MenuItems = MenuItems + '<li><a href="calendarview.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Calendar View</a></li>';
     
 		$( "#"+ActivePageN+" .PanelItems" ).append(MenuItems);
@@ -63,7 +62,7 @@ $(document).on("pageshow",function(){
 	}
 
 
-	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright 2016 &copy;");
+	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright Gov.Kn 2016 &copy;");
 
 });
 
@@ -230,9 +229,9 @@ $(document).on("pageshow","#AllEvents",function(){
 			finishid = PerPage - 1,
 			Start = 0;
 
-		$(document).ready(Showmore(Start));
+		$(document).ready(ShowmoreEvents(Start));
 
-		function Showmore(amount){
+		function ShowmoreEvents(amount){
 			var run = 'true';
 			var EndTo = amount + PerPage;
 
@@ -241,7 +240,7 @@ $(document).on("pageshow","#AllEvents",function(){
 					PerPage = PerPage  - sub;
 			}
 
-			if(amount > totalrec){run = 'false';}
+			if(amount => totalrec){run = 'false';}
 			if(run == 'true'){
 				//alert('run');
 				for (var i = 0; i < PerPage; i++) {
@@ -286,7 +285,7 @@ $(document).on("pageshow","#AllEvents",function(){
 					var Start = $( ".Eventlistitems li" ).length,
 						Start = Start + 1;
 
-					$(document).ready(Showmore(Start));
+					$(document).ready(ShowmoreEvents(Start));
 				}
 			});
 		}
@@ -298,15 +297,16 @@ $(document).on("pageshow","#AllEvents",function(){
 
 //Home Page
 $(document).on("pageshow","#HomePage",function(){
-
+//alert('show');
 	if($( "#HomePage .listitems" ).has( "li" ).length == 0){
 		//alert("hi");
 		
 		$(document).ready(loading);
 		//$('.listitems').empty();
 
+		//Featured Events
 		$.ajax({
-	        url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+	        url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_geteventsfeatured?contenttype=json",
 	        //https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json
 	        //data: {q : 'Van Gogh'},
 	        xhrFields: {
@@ -318,70 +318,7 @@ $(document).on("pageshow","#HomePage",function(){
 	            withCredentials: true
 	        },
 	    }).then(function(data) {
-	    	$.ajax({
-		        url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_geteventsfeatured?contenttype=json",
-		        //https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json
-		        //data: {q : 'Van Gogh'},
-		        xhrFields: {
-		            // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-		            // This can be used to set the 'withCredentials' property.
-		            // Set the value to 'true' if you'd like to pass cookies to the server.
-		            // If this is enabled, your server must respond with the header
-		            // 'Access-Control-Allow-Credentials: true'.
-		            withCredentials: true
-		        },
-		    }).then(function(data) {
-		        var totalrec = 5; //data.eventsObjects.length;
-		        /*if(totalrec > 10){
-		            var totalrec = 10;
-		        }*/
-		        var finishid = totalrec - 1;
-		        for (var i = 0; i < totalrec; i++) {
-		            var title = data.eventsObjects[i].title,
-		                EventDate = new Date(data.eventsObjects[i].startDate),
-		                EventDate = EventDate.toDateString(),
-		                imgthumb = data.eventsObjects[i].flyerThumbnail;
-
-		                if (data.eventsObjects[i].endDate != null) {
-		                	var EndDate = new Date(data.eventsObjects[i].endDate),
-		                		EndDate = EndDate.toDateString(),
-		                		Blank = ' - ',
-		                		DateDisplay = EventDate.concat(Blank,EndDate);
-		                }
-		                else{
-		                	DateDisplay = EventDate;
-		                }
-		                
-	            	$('.featlist').append('<li class="featlistitems"><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide"><img src="'+imgthumb+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
-		            
-		            if(i == finishid){
-		                $(".featlistitems").on("swipeleft",function(){
-				            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
-				                id = this.id,
-				                nextid = id + 1;
-
-				            if($(this).is(':last-child') == false){
-				                $(this).fadeOut("fast", function(){
-				                    $(this).next().fadeIn();
-				                });
-				            }
-				        });
-
-				        $(".featlistitems").on("swiperight",function(){
-				            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
-				                id = this.id,
-				                nextid = id + 1;
-
-				            if($(this).is(':first-child') == false){
-				                $(this).fadeOut("fast", function(){
-				                    $(this).prev().fadeIn();
-				                });
-				            }
-				        });
-		            }
-		        };
-		    });
-	        var totalrec = 10; //data.eventsObjects.length;
+	        var totalrec = 5; //data.eventsObjects.length;
 	        /*if(totalrec > 10){
 	            var totalrec = 10;
 	        }*/
@@ -402,15 +339,139 @@ $(document).on("pageshow","#HomePage",function(){
 	                	DateDisplay = EventDate;
 	                }
 	                
-	            // if(i <= 4){
-	            // 	$('.featlist').append('<li class="featlistitems"><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide"><img src="'+imgthumb+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
-	            // };
+            	$('.featlist').append('<li id="'+i+'" class="featlistitems"><a href="details.html?Title='+ title +'" data-transition="slide"><img src="'+imgthumb+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
+            	$('.featlistpagination').append('<li id="pz'+i+'" class=""></li>');
 	            
-	            $('.listitems').append('<li><a id="'+i+'" href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
-	            
-	        };
+	            if(i == finishid){
+	            	$('.featlistpagination #pz0').addClass('active');
 
-	        $('#overlay').remove();
+	                $(".featlistitems").on("swipeleft",function(){
+			            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
+			                id = this.id,
+			                nextid = parseInt(id) + 1;
+			            
+			            if($(this).is(':last-child') == false){
+
+			            	$('.featlistpagination li').removeClass('active');
+			                $(this).fadeOut("fast", function(){
+			                    $(this).next().fadeIn();
+			                    $('.featlistpagination #pz'+nextid).addClass('active');
+			                });
+			            }
+			            // else{
+			            // 	$('.featlistpagination li').removeClass('active');
+			            // 	$(this).fadeOut("fast", function(){
+			            //         $('featlist #lpz0').fadeIn();
+			            //         $('.featlistpagination #pz0').addClass('active');
+			            //     });
+			            // }
+			        });
+
+			        $(".featlistitems").on("swiperight",function(){
+			            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
+			                id = this.id,
+			                nextid = parseInt(id) - 1;
+			            
+			            if($(this).is(':first-child') == false){
+
+			            	$('.featlistpagination li').removeClass('active');
+			                $(this).fadeOut("fast", function(){
+			                    $(this).prev().fadeIn();
+			                    $('.featlistpagination #pz'+nextid).addClass('active');
+			                });
+			            }
+			            // else{
+			            // 	$('.featlistpagination li').removeClass('active');
+			            // 	$(this).fadeOut("fast", function(){
+			            //         $('featlist #lpz4').fadeIn();
+			            //         $('.featlistpagination #pz4').addClass('active');
+			            //     });
+			            // }
+			        });
+	            }
+	        };
+	    });
+		
+		//Upcoming Events
+		$.ajax({
+	        url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+	        //https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json
+	        data: {forcalendar : false},
+	        xhrFields: {
+	            // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+	            // This can be used to set the 'withCredentials' property.
+	            // Set the value to 'true' if you'd like to pass cookies to the server.
+	            // If this is enabled, your server must respond with the header
+	            // 'Access-Control-Allow-Credentials: true'.
+	            withCredentials: true
+	        },
+	    }).then(function(data) {
+	    	var totalrec = 50,
+				PerPage = 10,
+				finishid = PerPage - 1,
+				Start = 0;
+
+			$(document).ready(ShowmoreUpcom(Start));
+
+			function ShowmoreUpcom(amount){
+				var run = 'true';
+				var EndTo = amount + PerPage;
+
+				if(EndTo > totalrec){
+					var sub = EndTo - totalrec;
+						PerPage = PerPage  - sub;
+				}
+
+				if(amount > totalrec){run = 'false';}
+				if(run == 'true'){
+					//alert('run');
+					for (var i = 0; i < PerPage; i++) {
+						//alert(totalrec);
+						var title = data.eventsObjects[amount].title,
+						EventDate = new Date(data.eventsObjects[amount].startDate),
+						EventDate = EventDate.toDateString(),
+						Details = data.eventsObjects[amount].pageContent,
+						Category = data.eventsObjects[amount].eventCategory,
+						EventImg = data.eventsObjects[amount].flyerFull;
+
+						if (data.eventsObjects[amount].endDate != null) {
+				        	var EndDate = new Date(data.eventsObjects[amount].endDate),
+				        		EndDate = EndDate.toDateString(),
+				        		Blank = ' - ',
+				        		DateDisplay = EventDate.concat(Blank,EndDate);
+				        }
+				        else{
+				        	DateDisplay = EventDate;
+				        }
+
+						$('.listitems').append('<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
+
+						
+
+						var amount = amount + 1;
+					};
+
+					$('#overlay').remove();
+				}
+
+				
+			}
+
+			var ActivePageN = $.mobile.activePage.attr('id');
+
+			if(ActivePageN == 'HomePage'){
+				$(document).bind("scrollstop", function() {
+					if($(window).scrollTop() + $(window).height() == $(document).height()) {
+						//alert("end of page");
+
+						var Start = $( ".listitems li" ).length,
+							Start = Start + 1;
+
+						$(document).ready(ShowmoreUpcom(Start));
+					}
+				});
+			}
+
 	    });
 	}
 });
@@ -478,9 +539,9 @@ $(document).on("pageshow","#Departments",function(){
 			finishid = PerPage - 1,
 			Start = 0;
 
-		$(document).ready(Showmore(Start));
+		$(document).ready(ShowmoreDep(Start));
 
-		function Showmore(amount){
+		function ShowmoreDep(amount){
 			var run = 'true';
 			var EndTo = amount + PerPage;
 
@@ -518,7 +579,7 @@ $(document).on("pageshow","#Departments",function(){
 					var Start = $( ".DepartmentListing li" ).length,
 						Start = Start + 1;
 
-					$(document).ready(Showmore(Start));
+					$(document).ready(ShowmoreDep(Start));
 				}
 			});
 		}
@@ -549,9 +610,9 @@ $(document).on("pageshow","#Ministries",function(){
 			finishid = PerPage - 1,
 			Start = 0;
 
-		$(document).ready(Showmore(Start));
+		$(document).ready(ShowmoreMin(Start));
 
-		function Showmore(amount){
+		function ShowmoreMin(amount){
 			var run = 'true';
 			var EndTo = amount + PerPage;
 
@@ -592,7 +653,7 @@ $(document).on("pageshow","#Ministries",function(){
 					var Start = $( ".MinistryListingPH li" ).length,
 						Start = Start + 1;
 
-					$(document).ready(Showmore(Start));
+					$(document).ready(ShowmoreMin(Start));
 				}
 			});
 		}
@@ -696,10 +757,12 @@ $(document).on("pageshow","#CalendarView",function(){
 	    return [year, month, day].join('-');
 	}
 
+	//$(document).ready(loading);
+
 	//alert('before');
 	$.ajax({
 		url: 'https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json',
-		//data: {searchtitle : EventTitle},
+		data: {forcalendar : true},
 		xhrFields: {
 		// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
 		// This can be used to set the 'withCredentials' property.
@@ -746,7 +809,7 @@ $(document).on("pageshow","#CalendarView",function(){
 
 		$(document).ready(function() {
 	    	//alert('ready');
-	    	CalDataString = String(CalDataString);
+	    	//CalDataString = String(CalDataString);
 	        $('#calendarz').fullCalendar({
 	            defaultDate: new Date(),
 	            header: {
@@ -759,22 +822,25 @@ $(document).on("pageshow","#CalendarView",function(){
                     //window.open('details.html?Title='+calEvent.title+'','_self');
                     $.mobile.navigate( 'details.html?Title='+calEvent.title );
                 },
-                loading: function(bool) {
-					$('#loadingcal').toggle(bool);
-				},
+    //             loading: function(bool) {
+    //             	alert(bool);
+				// 	$('#overlay').toggle('fast',bool);
+				// },
 	            editable: false,
 	            eventLimit: true, // allow "more" link when too many events
 	            events: events,
 	            eventBackgroundColor: 'black', 
                 eventTextColor: 'white'
 	        });
+
+	        //$('#overlay').remove();
 	    });
 
 	});
     
 });
 
-//Group Event Listing Page
+//Search Listing Page
 $(document).on("pageshow","#SearchEvents",function(){
 	
 	//alert("pageshow event fired - detailspage is now shown");
@@ -817,10 +883,10 @@ $(document).on("pageshow","#SearchEvents",function(){
 			$('#overlay').remove();
 		}
 		else{
-			$(document).ready(Showmore(Start));
+			$(document).ready(ShowmoreRes(Start));
 		}
 
-		function Showmore(amount){
+		function ShowmoreRes(amount){
 			var run = 'true';
 			var EndTo = amount + PerPage;
 
@@ -870,7 +936,7 @@ $(document).on("pageshow","#SearchEvents",function(){
 					var Start = $( ".resultlistitems li" ).length,
 						Start = Start + 1;
 
-					$(document).ready(Showmore(Start));
+					$(document).ready(ShowmoreRes(Start));
 				}
 			});
 		}
