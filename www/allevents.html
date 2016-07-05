@@ -71,26 +71,28 @@
         </div>
 
         <div data-role="header">
-            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
+            <a href="#HomePage" data-transition="flip" class="ui-btn ui-nodisc-icon ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
             <h1 class="AppHeader">SKN Government Events</h1>
-            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
+            <a href="#myPanel" class="ui-btn ui-nodisc-icon ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
         </div>
 
         <div class="Listing">
             <div data-role="main" class="ui-content">
                 <h3>Events</h3>
 
-                <form class="ui-filterable">
+                <!-- <form class="ui-filterable">
                     <input id="myFilterAllEvents" data-type="search" placeholder="Search Events..">
-                </form>
+                </form> -->
+
+                <ol id="autocompleteall" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search Events..." data-filter-theme="a"></ol>
 
                 <ol data-role="listview" class="Eventlistitems" data-inset="true" data-filter="true" data-input="#myFilterAllEvents">
-                    <!-- Names goes here..-->
+                    
                 </ol>
             </div>
         </div>
 
-        <div data-role="footer" class="MyFooter">
+        <div data-role="footer" class="MyFooter" data-position="fixed">
             <h1></h1>
         </div>
     </div>

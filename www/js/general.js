@@ -49,7 +49,7 @@ $(document).on("pageshow",function(){
 		var MenuItems = null;
 
 		MenuItems = '<li><a href="#HomePage" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Home</a></li>';
-		MenuItems = MenuItems + '<li><a href="allevents.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">All Events</a></li>';
+		MenuItems = MenuItems + '<li><a href="allevents.html" data-transition="flip" class="Evz ui-btn ui-btn-icon-right ui-icon-carat-r">All Events</a></li>';
 		MenuItems = MenuItems + '<li><a href="featuredevents.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Featured Events</a></li>';
 		MenuItems = MenuItems + '<li><a href="ministries.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ministries</a></li>';
 		MenuItems = MenuItems + '<li><a href="departments.html" data-transition="flip" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Departments</a></li>';
@@ -60,7 +60,6 @@ $(document).on("pageshow",function(){
 	else{
 		//alert($( ".PanelItems" ).html());
 	}
-
 
 	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright Gov.Kn 2016 &copy;");
 
@@ -92,7 +91,7 @@ $(document).on("pageshow","#detailspage",function(){
 		var totalrec = 1;
 
 		var finishid = totalrec - 1;
-		
+
 		for (var i = 0; i < totalrec; i++) {
 			var title = data.eventsObjects[i].title,
 			EventDate = new Date(data.eventsObjects[i].startDate),
@@ -100,11 +99,18 @@ $(document).on("pageshow","#detailspage",function(){
 			Details = data.eventsObjects[i].pageContent,
 			Category = data.eventsObjects[i].eventCategories.categoryName,
 			EventImg = data.eventsObjects[i].flyerFull,
+			Base64Img = data.eventsObjects[i].base64,
 			EventMins = data.eventsObjects[i].eventMinistries.name,
 			EventDeps = data.eventsObjects[i].eventDepartments.name; 
 
-			//alert(EventMins);
-			//alert(EventDeps);
+			if(Base64Img != ''){
+				//EventHasImg = 'data:image/jpeg;base64,'+Base64Img;
+				EventHasImg = 'data:image;base64,'+Base64Img;
+			}
+			else{
+				EventHasImg = EventImg;
+			}
+
 			if (data.eventsObjects[i].endDate != null) {
             	var EndDate = new Date(data.eventsObjects[i].endDate),
             		EndDate = EndDate.toDateString(),
@@ -120,31 +126,17 @@ $(document).on("pageshow","#detailspage",function(){
 			$('.EventDetails').append(Details);
 			$('.Ministries').append(EventMins);
 			$('.Departments').append(EventDeps);
-			$('.EventFlyer').attr('src', EventImg);
+			$('.EventFlyer').attr('src', EventHasImg);
 
 		};
 
 		$('#overlay').remove();
 	});
 
-	// function AddToCal(){
-	// 	// prep some variables
-	// 	var startDate = new Date(2016,6,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
-	// 	var endDate = new Date(2016,6,15,30,30,0,0,0);
-	// 	var title = "My nice event";
-	// 	var location = "Home";
-	// 	var notes = "Some notes about this event.";
-	// 	var success = function(message) { alert("Success: " + JSON.stringify(message)); };
-	// 	var error = function(message) { alert("Error: " + message); };
-
-	// 	// create an event silently (on Android < 4 an interactive dialog is shown)
-	// 	window.plugins.calendar.createEvent(title,location,notes,startDate,endDate,success,error);
-	// }
 });
 //FeaturedEvents
 $(document).on("pageshow","#FeaturedEvents",function(){
 	
-	//alert("pageshow event fired - detailspage is now shown");
 	$(document).ready(loading);
 
 	var EventTitle = getQueryVariable('Title'),
@@ -204,13 +196,65 @@ $(document).on("pageshow","#FeaturedEvents",function(){
 
 //All Events Page
 $(document).on("pageshow","#AllEvents",function(){
-	
-	//alert("pageshow event fired - detailspage is now shown");
+	var ActivePageN = $.mobile.activePage.attr('id'),
+		ActivePageC = $.mobile.activePage.attr('class');
+	//alert("pageshow event fired - events is now shown");
+	$( "#autocompleteall" ).on( "filterablebeforefilter", function ( e, data ) {
+        var $ol = $( this ),
+            $input = $( data.input ),
+            value = $input.val(),
+            html = "",
+            origlist = $('.Eventlistitems');
+        $ol.html( "" );
+        if ( value && value.length > 2 ) {
+            $(document).ready(loading);
+            $ol.listview( "refresh" );
+            $.ajax({
+                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+                dataType: "json",
+                crossDomain: true,
+                data: {
+                    searchtitle: $input.val()
+                }
+            })
+            .then( function ( data ) {
+            	PerPage= data.eventsObjects.length;
+                // $.each( response, function ( i, val ) {
+                //     html += "<li>" + val + "</li>";
+                // });
+                for (var i = 0; i < PerPage; i++) {
+					var title = data.eventsObjects[i].title,
+					EventDate = new Date(data.eventsObjects[i].startDate),
+					EventDate = EventDate.toDateString(),
+					Details = data.eventsObjects[i].pageContent,
+					Category = data.eventsObjects[i].eventCategory,
+					EventImg = data.eventsObjects[i].flyerFull;
+
+					if (data.eventsObjects[i].endDate != null) {
+			        	var EndDate = new Date(data.eventsObjects[i].endDate),
+			        		EndDate = EndDate.toDateString(),
+			        		Blank = ' - ',
+			        		DateDisplay = EventDate.concat(Blank,EndDate);
+			        }
+			        else{
+			        	DateDisplay = EventDate;
+			        }
+
+			        html += '<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>';
+				};
+				origlist.hide();
+				$('#overlay').remove();
+                $ol.html( html );
+                $ol.listview( "refresh" );
+                $ol.trigger( "updatelayout");
+            });
+        }
+        else{
+        	origlist.show();
+        }
+    });
 
 	$(document).ready(loading);
-
-	var EventTitle = getQueryVariable('Title'),
-		EventTitle = decodeURI(EventTitle);
 
 	$.ajax({
 		url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
@@ -232,7 +276,8 @@ $(document).on("pageshow","#AllEvents",function(){
 		$(document).ready(ShowmoreEvents(Start));
 
 		function ShowmoreEvents(amount){
-			var run = 'true';
+			
+			var runev = 'true';
 			var EndTo = amount + PerPage;
 
 			if(EndTo > totalrec){
@@ -240,9 +285,10 @@ $(document).on("pageshow","#AllEvents",function(){
 					PerPage = PerPage  - sub;
 			}
 
-			if(amount => totalrec){run = 'false';}
-			if(run == 'true'){
-				//alert('run');
+			if(amount > totalrec){runev = 'false';}
+			
+			if(runev == 'true'){
+				//alert('display');
 				for (var i = 0; i < PerPage; i++) {
 					//alert(totalrec);
 					var title = data.eventsObjects[amount].title,
@@ -264,8 +310,6 @@ $(document).on("pageshow","#AllEvents",function(){
 
 					$('.Eventlistitems').append('<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 
-					
-
 					var amount = amount + 1;
 				};
 
@@ -275,12 +319,14 @@ $(document).on("pageshow","#AllEvents",function(){
 			
 		}
 
-		var ActivePageN = $.mobile.activePage.attr('id');
-
-		if(ActivePageN == 'AllEvents'){
+		
+		//alert(ActivePageN);
+		if(ActivePageN == 'AllEvents' && $('#'+ActivePageN).hasClass('ui-page-active')){
+			//alert('true');
 			$(document).bind("scrollstop", function() {
 				if($(window).scrollTop() + $(window).height() == $(document).height()) {
 					//alert("end of page");
+					//alert(ActivePageN +' events');
 
 					var Start = $( ".Eventlistitems li" ).length,
 						Start = Start + 1;
@@ -298,7 +344,96 @@ $(document).on("pageshow","#AllEvents",function(){
 //Home Page
 $(document).on("pageshow","#HomePage",function(){
 //alert('show');
-	if($( "#HomePage .listitems" ).has( "li" ).length == 0){
+	$( "#autocomplete" ).on( "filterablebeforefilter", function ( e, data ) {
+        var $ol = $( this ),
+            $input = $( data.input ),
+            value = $input.val(),
+            html = "";
+        $ol.html( "" );
+        if ( value && value.length > 2 ) {
+            $(document).ready(loading);
+            $ol.listview( "refresh" );
+            $.ajax({
+                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+                dataType: "json",
+                crossDomain: true,
+                data: {
+                    searchtitle: $input.val()
+                }
+            })
+            .then( function ( data ) {
+            	PerPage= data.eventsObjects.length;
+                // $.each( response, function ( i, val ) {
+                //     html += "<li>" + val + "</li>";
+                // });
+                for (var i = 0; i < PerPage; i++) {
+					var title = data.eventsObjects[i].title,
+					EventDate = new Date(data.eventsObjects[i].startDate),
+					EventDate = EventDate.toDateString(),
+					Details = data.eventsObjects[i].pageContent,
+					Category = data.eventsObjects[i].eventCategory,
+					EventImg = data.eventsObjects[i].flyerFull;
+
+					if (data.eventsObjects[i].endDate != null) {
+			        	var EndDate = new Date(data.eventsObjects[i].endDate),
+			        		EndDate = EndDate.toDateString(),
+			        		Blank = ' - ',
+			        		DateDisplay = EventDate.concat(Blank,EndDate);
+			        }
+			        else{
+			        	DateDisplay = EventDate;
+			        }
+
+			        html += '<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>';
+				};
+				$('#overlay').remove();
+                $ol.html( html );
+                $ol.listview( "refresh" );
+                $ol.trigger( "updatelayout");
+            });
+        }
+        else{
+        	$(document).ready(loading);
+            $ol.listview( "refresh" );
+            $.ajax({
+                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+                dataType: "json",
+                crossDomain: true
+            })
+            .then( function ( data ) {
+            	PerPage= data.eventsObjects.length;
+                // $.each( response, function ( i, val ) {
+                //     html += "<li>" + val + "</li>";
+                // });
+                for (var i = 0; i < 10; i++) {
+					var title = data.eventsObjects[i].title,
+					EventDate = new Date(data.eventsObjects[i].startDate),
+					EventDate = EventDate.toDateString(),
+					Details = data.eventsObjects[i].pageContent,
+					Category = data.eventsObjects[i].eventCategory,
+					EventImg = data.eventsObjects[i].flyerFull;
+
+					if (data.eventsObjects[i].endDate != null) {
+			        	var EndDate = new Date(data.eventsObjects[i].endDate),
+			        		EndDate = EndDate.toDateString(),
+			        		Blank = ' - ',
+			        		DateDisplay = EventDate.concat(Blank,EndDate);
+			        }
+			        else{
+			        	DateDisplay = EventDate;
+			        }
+
+			        html += '<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>';
+				};
+				$('#overlay').remove();
+                $ol.html( html );
+                $ol.listview( "refresh" );
+                $ol.trigger( "updatelayout");
+            });
+        }
+    });
+
+	if($( "#HomePage #autocomplete" ).has( "li" ).length == 0){
 		//alert("hi");
 		
 		$(document).ready(loading);
@@ -391,7 +526,7 @@ $(document).on("pageshow","#HomePage",function(){
 	            }
 	        };
 	    });
-		
+
 		//Upcoming Events
 		$.ajax({
 	        url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
@@ -406,6 +541,7 @@ $(document).on("pageshow","#HomePage",function(){
 	            withCredentials: true
 	        },
 	    }).then(function(data) {
+
 	    	var totalrec = 50,
 				PerPage = 10,
 				finishid = PerPage - 1,
@@ -444,7 +580,7 @@ $(document).on("pageshow","#HomePage",function(){
 				        	DateDisplay = EventDate;
 				        }
 
-						$('.listitems').append('<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
+						$('#autocomplete').append('<li><a href="details.html?Title='+ title +'" data-transition="slide" class="EventListItem ui-btn ui-btn-icon-right ui-icon-carat-r"><h3>'+ title +'</h3><p>'+ DateDisplay +'</p></a></li>');
 
 						
 
@@ -457,20 +593,21 @@ $(document).on("pageshow","#HomePage",function(){
 				
 			}
 
-			var ActivePageN = $.mobile.activePage.attr('id');
+			// var ActivePageN = $.mobile.activePage.attr('id');
+			
+			// if(ActivePageN == 'HomePage' && $('#'+ActivePageN).hasClass('ui-page-active')){
+			// 	//alert('true');
+			// 	$(document).bind("scrollstop", function() {
+			// 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+			// 			//alert("end of page");
+			// 			//alert(ActivePageN +' home');
+			// 			var Start = $( ".listitems li" ).length,
+			// 				Start = Start + 1;
 
-			if(ActivePageN == 'HomePage'){
-				$(document).bind("scrollstop", function() {
-					if($(window).scrollTop() + $(window).height() == $(document).height()) {
-						//alert("end of page");
-
-						var Start = $( ".listitems li" ).length,
-							Start = Start + 1;
-
-						$(document).ready(ShowmoreUpcom(Start));
-					}
-				});
-			}
+			// 			$(document).ready(ShowmoreUpcom(Start));
+			// 		}
+			// 	});
+			// }
 
 	    });
 	}
@@ -520,6 +657,49 @@ $(document).on("pageshow","#Departments",function(){
 
 	$(document).ready(loading);
 	//$('.listitems').empty();
+
+	$( "#autocompletedep" ).on( "filterablebeforefilter", function ( e, data ) {
+        var $ol = $( this ),
+            $input = $( data.input ),
+            value = $input.val(),
+            html = "",
+            origlist = $('.DepartmentListing');
+        $ol.html( "" );
+        if ( value && value.length > 2 ) {
+            $(document).ready(loading);
+            $ol.listview( "refresh" );
+            $.ajax({
+                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+                dataType: "json",
+                crossDomain: true,
+                data: {
+                    searchtitle: $input.val()
+                }
+            })
+            .then( function ( data ) {
+            	PerPage= data.departments.length;
+                // $.each( response, function ( i, val ) {
+                //     html += "<li>" + val + "</li>";
+                // });
+                for (var i = 0; i < PerPage; i++) {
+		            var title = data.departments[i].name,
+		                Descr = data.departments[i].summary;
+		                
+		            
+		            html += '<li><a href="groupevents.html?CatType=Departments&Dep='+title+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">'+title+'</a></li>';
+
+		        };
+				origlist.hide();
+				$('#overlay').remove();
+                $ol.html( html );
+                $ol.listview( "refresh" );
+                $ol.trigger( "updatelayout");
+            });
+        }
+        else{
+        	origlist.show();
+        }
+    });
 
 	$.ajax({
         url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getdepartments/?contenttype=json",
@@ -759,7 +939,6 @@ $(document).on("pageshow","#CalendarView",function(){
 
 	//$(document).ready(loading);
 
-	//alert('before');
 	$.ajax({
 		url: 'https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json',
 		data: {forcalendar : true},
@@ -778,26 +957,16 @@ $(document).on("pageshow","#CalendarView",function(){
 		var CalDataString = null;
 		var events = [];
 		for (var i = 0; i < totalrec; i++) {
-			//if(i == 0){var CalDataString = '['}
 			
 			var title = data.eventsObjects[i].title,
 			EventDate = formatDate(data.eventsObjects[i].startDate);
 
 			if (data.eventsObjects[i].endDate != null) {
             	var EndDate = formatDate(data.eventsObjects[i].endDate);
-            		//EndDate = EndDate.toDateString();
             }
             else{
             	var EndDate = '';
             }
-
-			// if(i == finishid){
-			// 	CalDataString = CalDataString + '{ title: '+title+', start: '+EventDate+' }';	
-			// 	//$('#testzzz').append(CalDataString);
-			// }	
-			// else{
-			// 	CalDataString = CalDataString + '{ title: '+title+', start: '+EventDate+'},';	
-			// }
 
 			events.push({
                 title: title,
@@ -808,8 +977,11 @@ $(document).on("pageshow","#CalendarView",function(){
 		};
 
 		$(document).ready(function() {
-	    	//alert('ready');
-	    	//CalDataString = String(CalDataString);
+			//When Calendar is visible remove load
+	        $('#calendarz').bind("DOMSubtreeModified",function(){
+				$('#overlay').remove();
+			});
+
 	        $('#calendarz').fullCalendar({
 	            defaultDate: new Date(),
 	            header: {
@@ -818,22 +990,15 @@ $(document).on("pageshow","#CalendarView",function(){
 					//right: 'month,agendaWeek,agendaDay'
 				},
 				eventClick: function(calEvent, jsEvent, view) {
-                    //alert('Event: ' + calEvent.title);
-                    //window.open('details.html?Title='+calEvent.title+'','_self');
                     $.mobile.navigate( 'details.html?Title='+calEvent.title );
                 },
-    //             loading: function(bool) {
-    //             	alert(bool);
-				// 	$('#overlay').toggle('fast',bool);
-				// },
 	            editable: false,
 	            eventLimit: true, // allow "more" link when too many events
 	            events: events,
 	            eventBackgroundColor: 'black', 
                 eventTextColor: 'white'
 	        });
-
-	        //$('#overlay').remove();
+	        
 	    });
 
 	});

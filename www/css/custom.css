@@ -27,6 +27,15 @@
     border-color: #2370DC!important;
 }
 
+.ui-header .ui-icon-home, .ui-header .ui-icon-bars{
+    background-color: #2370DC!important;
+    border-color: #2370DC!important;
+}
+
+.AppHeader{
+    margin: 0 15%!important;
+}
+
 .ui-header h1{
     color: #fff;
 }
@@ -167,7 +176,7 @@ input.submit {
     /* width: 29%; */
     padding: 0;
     position: absolute;
-    left: 41%;
+    left: 32%;
 }
 
 .featlistpagination li{
@@ -225,16 +234,23 @@ span.fc-title {
     float: left;
 }
 
-.navbarbtn{
+ul .navbarli .navbarbtn{
     background-color: #4B5360!important;
     border-color: #4B5360!important;
 }
 
 .navbarli{
     border: 1px solid #838b98!important;
+    /*height: 40px;*/
 }
 
 .ui-content {
+    width: 100%;
+}
+
+.ui-navbar {
+    max-width: 100%;
+    float: left;
     width: 100%;
 }
 

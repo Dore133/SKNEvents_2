@@ -75,18 +75,20 @@
         </div>
 
         <div data-role="header">
-            <a href="#HomePage" data-transition="flip" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
+            <a href="#HomePage" data-transition="flip" class="ui-btn ui-nodisc-icon ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a>
             <h1 class="AppHeader">SKN Government Events</h1>
-            <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
+            <a href="#myPanel" class="ui-btn ui-nodisc-icon ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
         </div>
 
         <div class="Listing">
             <div data-role="main" class="ui-content">
                 <h3>Departments</h3>
 
-                <form class="ui-filterable">
+                <!-- <form class="ui-filterable">
                     <input id="myFilterDep" data-type="search" placeholder="Search Departments..">
-                </form>
+                </form> -->
+
+                <ol id="autocompletedep" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search Events..." data-filter-theme="a"></ol>
 
                 <ol data-role="listview" class="DepartmentListing" data-inset="true" data-filter="true" data-input="#myFilterDep">
                     <!-- Names goes here..-->
