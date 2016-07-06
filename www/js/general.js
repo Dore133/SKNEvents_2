@@ -462,7 +462,17 @@ $(document).on("pageshow","#HomePage",function(){
 	            var title = data.eventsObjects[i].title,
 	                EventDate = new Date(data.eventsObjects[i].startDate),
 	                EventDate = EventDate.toDateString(),
-	                imgthumb = data.eventsObjects[i].flyerThumbnail;
+	                imgthumb = data.eventsObjects[i].flyerThumbnail,
+	                Base64Img = data.eventsObjects[i].base64;
+
+	                if(Base64Img != ''){
+						//EventHasImg = 'data:image/jpeg;base64,'+Base64Img;
+						//alert('base is here');
+						EventHasImg = 'data:image;base64,'+Base64Img;
+					}
+					else{
+						EventHasImg = imgthumb;
+					}
 
 	                if (data.eventsObjects[i].endDate != null) {
 	                	var EndDate = new Date(data.eventsObjects[i].endDate),
@@ -474,11 +484,12 @@ $(document).on("pageshow","#HomePage",function(){
 	                	DateDisplay = EventDate;
 	                }
 	                
-            	$('.featlist').append('<li id="'+i+'" class="featlistitems"><a href="details.html?Title='+ title +'" data-transition="slide"><img src="'+imgthumb+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
+            	$('.featlist').append('<li id="'+i+'" class="featlistitems"><a href="details.html?Title='+ title +'" data-transition="slide"><img src="'+EventHasImg+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
             	$('.featlistpagination').append('<li id="pz'+i+'" class=""></li>');
 	            
 	            if(i == finishid){
 	            	$('.featlistpagination #pz0').addClass('active');
+	            	$('.featlist li:nth-child(1)').addClass('active');
 
 	                $(".featlistitems").on("swipeleft",function(){
 			            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
@@ -488,19 +499,15 @@ $(document).on("pageshow","#HomePage",function(){
 			            if($(this).is(':last-child') == false){
 
 			            	$('.featlistpagination li').removeClass('active');
+			            	$(this).removeClass('active');
 			                $(this).fadeOut("fast", function(){
 			                    $(this).next().fadeIn();
+			                    $(this).next().addClass('active');
 			                    $('.featlistpagination #pz'+nextid).addClass('active');
 			                });
 			            }
-			            // else{
-			            // 	$('.featlistpagination li').removeClass('active');
-			            // 	$(this).fadeOut("fast", function(){
-			            //         $('featlist #lpz0').fadeIn();
-			            //         $('.featlistpagination #pz0').addClass('active');
-			            //     });
-			            // }
 			        });
+
 
 			        $(".featlistitems").on("swiperight",function(){
 			            var FeatAmt = $( ".featlistitems" ).has( "li" ).length,
@@ -510,19 +517,34 @@ $(document).on("pageshow","#HomePage",function(){
 			            if($(this).is(':first-child') == false){
 
 			            	$('.featlistpagination li').removeClass('active');
+			            	$(this).removeClass('active');
 			                $(this).fadeOut("fast", function(){
 			                    $(this).prev().fadeIn();
+			                    $(this).prev().addClass('active');
 			                    $('.featlistpagination #pz'+nextid).addClass('active');
 			                });
 			            }
-			            // else{
-			            // 	$('.featlistpagination li').removeClass('active');
-			            // 	$(this).fadeOut("fast", function(){
-			            //         $('featlist #lpz4').fadeIn();
-			            //         $('.featlistpagination #pz4').addClass('active');
-			            //     });
-			            // }
 			        });
+
+			        $(".featlistpagination li").on("tap",function(){
+			        	if($(this).hasClass('active')){
+
+			        	}
+			        	else{
+			        		var id = this.id,
+			        			id = id[id.length -1],
+			        			idshow = parseInt(id) + 1;
+
+			        		$('.featlistpagination li').removeClass('active');
+			        		$(this).addClass('active');
+			        		$('.featlist li.active').fadeOut('fast' ,function(){
+			        			$('.featlist li').removeClass('active');
+			                    $('.featlist li:nth-child('+idshow+')').fadeIn('fast' , function(){
+			                    	$(this).addClass('active');
+			                    });
+			                });
+			        	}
+		        	});
 	            }
 	        };
 	    });
@@ -669,7 +691,7 @@ $(document).on("pageshow","#Departments",function(){
             $(document).ready(loading);
             $ol.listview( "refresh" );
             $.ajax({
-                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
+                url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getdepartments/?contenttype=json",
                 dataType: "json",
                 crossDomain: true,
                 data: {

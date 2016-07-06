@@ -22,7 +22,6 @@
 }
 
 .ui-header{
-    height: 45px!important;
     background-color: #2370DC!important;
     border-color: #2370DC!important;
 }
@@ -30,6 +29,29 @@
 .ui-header .ui-icon-home, .ui-header .ui-icon-bars{
     background-color: #2370DC!important;
     border-color: #2370DC!important;
+}
+
+ul.PanelItems li {
+    background: #f6f6f6;
+    float: left;
+    width: 100%;
+}
+
+.homebtn{
+    background-color: #2370DC!important;border-color: #2370DC!important;
+    border-color: #2370DC!important;
+    border-radius: 20px!important;
+    padding: 5px!important;
+}
+
+.homebtnnav{
+    background-color: rgba(0,0,0,.3)!important;
+    border-color: rgba(0,0,0,.3)!important;
+    width: 22px;
+    height: 22px;
+    margin: 0 auto;
+    border-radius: 20px!important;
+    padding: 1px;
 }
 
 .AppHeader{

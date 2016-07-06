@@ -20,25 +20,6 @@
     <!-- End Jquery Mobile -->
     <!--<script type="text/javascript" src="js/general.js"></script> -->
     <title>Event Details</title>
-    <script type="text/javascript">
-    $(document).on("pageshow","#detailspage",function(){
-        alert(hi);
-        $( ".AddCal" ).bind( "click", function(event, ui) {
-            alert('clicked');
-          // prep some variables
-            var startDate = new Date(2016,6,30,18,30,0,0,0); // beware: month 0 = january, 11 = december
-            var endDate = new Date(2016,6,15,30,30,0,0,0);
-            var title = "My nice event";
-            var location = "Home";
-            var notes = "Some notes about this event.";
-            var success = function(message) { alert("Success: " + JSON.stringify(message)); };
-            var error = function(message) { alert("Error: " + message); };
-
-            // create an event silently (on Android < 4 an interactive dialog is shown)
-            window.plugins.calendar.createEvent(title,location,notes,startDate,endDate,success,error);
-        });
-    });
-    </script>
 </head>
 
 <body>
@@ -55,7 +36,7 @@
             <h1 class="AppHeader">SKN Government Events</h1>
             <div data-role="navbar" data-iconpos="top">
                 <ul>
-                    <li class="navbarli"><a class="navbarbtn" href="#HomePage" data-transition="flip" data-icon="home"></a></li>
+                    <li class="navbarli"><a class="navbarbtn" href="#HomePage" data-transition="flip"><div class="homebtnnav"><img src="img/Events$Coat_of_Arms.png" width="18" height="18"></div></a></li>
                     <li class="navbarli"><a class="navbarbtn" data-transition="slide" data-icon="arrow-l" data-rel="back"></a></li>
                     <li class="navbarli"><a class="navbarbtn" href="#myPanel" data-transition="flip" data-icon="bars"></a></li>
                 </ul>
