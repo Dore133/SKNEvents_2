@@ -61,7 +61,7 @@ $(document).on("pageshow",function(){
 		//alert($( ".PanelItems" ).html());
 	}
 
-	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright Gov.Kn 2016 &copy;");
+	$( "#"+ActivePageN+" .MyFooter h1" ).html("Copyright gov.kn 2016 &copy;");
 
 });
 
@@ -259,6 +259,7 @@ $(document).on("pageshow","#AllEvents",function(){
 	$.ajax({
 		url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
 		//data: {searchtitle : EventTitle},
+		cache: true,
 		xhrFields: {
 		// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
 		// This can be used to set the 'withCredentials' property.
@@ -357,6 +358,7 @@ $(document).on("pageshow","#HomePage",function(){
                 url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json",
                 dataType: "json",
                 crossDomain: true,
+                cache: true,
                 data: {
                     searchtitle: $input.val()
                 }
@@ -484,7 +486,7 @@ $(document).on("pageshow","#HomePage",function(){
 	                	DateDisplay = EventDate;
 	                }
 	                
-            	$('.featlist').append('<li id="'+i+'" class="featlistitems"><a href="details.html?Title='+ title +'" data-transition="slide"><img src="'+EventHasImg+'" width="100" height="100"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
+            	$('.featlist').append('<li id="'+i+'" class="featlistitems"><a href="details.html?Title='+ title +'" data-transition="slide"><img src="'+EventHasImg+'" width="100%" height="200"><h3 style="margin-top:5px;">'+title+'</h3><p>'+ DateDisplay +'</p</a></li>');
             	$('.featlistpagination').append('<li id="pz'+i+'" class=""></li>');
 	            
 	            if(i == finishid){
@@ -694,6 +696,7 @@ $(document).on("pageshow","#Departments",function(){
                 url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getdepartments/?contenttype=json",
                 dataType: "json",
                 crossDomain: true,
+                cache: true,
                 data: {
                     searchtitle: $input.val()
                 }
@@ -727,6 +730,7 @@ $(document).on("pageshow","#Departments",function(){
         url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getdepartments/?contenttype=json",
         //https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json
         //data: {q : 'Van Gogh'},
+        cache: true,
         xhrFields: {
             // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
             // This can be used to set the 'withCredentials' property.
@@ -798,6 +802,7 @@ $(document).on("pageshow","#Ministries",function(){
         url: "https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getministries/?contenttype=json",
         //https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json
         //data: {q : 'Van Gogh'},
+        cache: true,
         xhrFields: {
             // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
             // This can be used to set the 'withCredentials' property.
@@ -959,11 +964,10 @@ $(document).on("pageshow","#CalendarView",function(){
 	    return [year, month, day].join('-');
 	}
 
-	//$(document).ready(loading);
-
 	$.ajax({
 		url: 'https://stkittsnevisegovernmentplatform-test.mendixcloud.com/rest/wsc_getevents/?contenttype=json',
 		data: {forcalendar : true},
+		cache: true,
 		xhrFields: {
 		// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
 		// This can be used to set the 'withCredentials' property.
@@ -973,11 +977,43 @@ $(document).on("pageshow","#CalendarView",function(){
 		withCredentials: true
 	},
 	}).then(function(data) {
+		// if (localStorage.EventsCal) {
+		// 	EventsCalV = JSON.parse(localStorage.EventsCal);
+		// }
+		// else{
+		// 	var totalrec = data.eventsObjects.length;
+		// 	var finishid = totalrec - 1;
+
+		// 	var CalDataString = null;
+		// 	var EventsCalV = [];
+		// 	for (var i = 0; i < totalrec; i++) {
+				
+		// 		var title = data.eventsObjects[i].title,
+		// 		EventDate = formatDate(data.eventsObjects[i].startDate);
+
+		// 		if (data.eventsObjects[i].endDate != null) {
+	 //            	var EndDate = formatDate(data.eventsObjects[i].endDate);
+	 //            }
+	 //            else{
+	 //            	var EndDate = '';
+	 //            }
+
+		// 		EventsCalV.push({
+	 //                title: title,
+	 //                start: EventDate,
+	 //                end: EndDate
+	 //            });
+
+		// 	};
+
+		// 	localStorage.EventsCal = JSON.stringify(EventsCalV);
+		// }
+
 		var totalrec = data.eventsObjects.length;
 		var finishid = totalrec - 1;
 
 		var CalDataString = null;
-		var events = [];
+		var EventsCalV = [];
 		for (var i = 0; i < totalrec; i++) {
 			
 			var title = data.eventsObjects[i].title,
@@ -990,13 +1026,15 @@ $(document).on("pageshow","#CalendarView",function(){
             	var EndDate = '';
             }
 
-			events.push({
+			EventsCalV.push({
                 title: title,
                 start: EventDate,
                 end: EndDate
             });
 
 		};
+
+		//localStorage.EventsCal = JSON.stringify(EventsCalV);
 
 		$(document).ready(function() {
 			//When Calendar is visible remove load
@@ -1016,12 +1054,13 @@ $(document).on("pageshow","#CalendarView",function(){
                 },
 	            editable: false,
 	            eventLimit: true, // allow "more" link when too many events
-	            events: events,
+	            events: EventsCalV,
 	            eventBackgroundColor: 'black', 
                 eventTextColor: 'white'
 	        });
 	        
 	    });
+		
 
 	});
     

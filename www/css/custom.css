@@ -22,6 +22,7 @@
 }
 
 .ui-header{
+    height: 45px!important;
     background-color: #2370DC!important;
     border-color: #2370DC!important;
 }
@@ -37,7 +38,64 @@ ul.PanelItems li {
     width: 100%;
 }
 
+.Listing .ui-listview {
+    background: #f6f6f6;
+}
+
+.ui-content{
+    text-shadow: none;
+}
+
 .homebtn{
+    /*background-color: #2370DC!important;border-color: #2370DC!important;
+    border-color: #2370DC!important;
+    border-radius: 20px!important;
+    padding: 5px!important;*/
+    /*...*/
+    padding: 0px!important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.myhomebtn:after {
+    width: 38px !important;
+    height: 38px !important;
+    top: 12px !important;
+    background-color: transparent !IMPORTANT;
+    background-size: 33px 60px;
+}
+
+/*.homebtn img{
+    width: 30px!important;
+}*/
+
+.mymenubtn:after {
+    width: 38px !important;
+    height: 38px !important;
+    top: 12px !important;
+    background-color: transparent !IMPORTANT;
+    background-size: 33px 60px!important;
+}
+
+.mymenubtn {
+    background: transparent !important;
+    border: none !important;
+    width: 50px!important;
+    height: 40px!important;
+    padding: 0;
+}
+
+
+.AppHeader{
+    margin: 0 15%!important;
+    /*...*/
+    text-shadow: none!important;
+    font-size: medium!important;
+    font-weight: bold!important; 
+    color: white!important;
+    font-family: sans-serif!important;
+}
+/*.homebtn{
     background-color: #2370DC!important;border-color: #2370DC!important;
     border-color: #2370DC!important;
     border-radius: 20px!important;
@@ -56,7 +114,7 @@ ul.PanelItems li {
 
 .AppHeader{
     margin: 0 15%!important;
-}
+}*/
 
 .ui-header h1{
     color: #fff;
@@ -69,6 +127,7 @@ ul.PanelItems li {
 
 .ui-footer h1{
     color: white;
+    text-shadow: none;
 }
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
@@ -169,15 +228,28 @@ input.submit {
     cursor: pointer;
 }
 
+.FeatListPH, .Listing{
+    float: left;
+    width: 100%;
+}
+
+.FeatListPH{
+    margin-bottom: 15px;
+}
+
+.Listing .ui-content {
+    padding: 0;
+}
+
 .featlist .featlistitems {
     display: none;
     list-style: none;
-    border:1px solid #ddd;
+    border-bottom:1px solid #ddd;
     text-align: center;
-    padding: 15px;
+    padding: 0px;
     /*border-radius: 10px;*/
     background: #f6f6f6;
-    height: 200px;
+    /*height: 200px;*/
     margin: 0 auto;
     width: 100%;
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.15);
@@ -222,7 +294,7 @@ input.submit {
 
 .featlist {
     padding: 0;
-    height: 200px;
+    /*height: 200px;*/
     width: 100%;
     float: left;
 }

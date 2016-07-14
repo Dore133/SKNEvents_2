@@ -52,37 +52,6 @@
     <script type="text/javascript" src="cordova.js"></script>
     <!-- End Calendar -->
     <title>SKN Events</title>
-    <script type="text/javascript">
-    $(document).on("pageshow","#detailspage",function(){
-        //alert('hi');
-        $( ".AddCal" ).bind( "click", function(event, ui) {
-            window.plugins.SocialShare.share(
-                successCallback,
-                failureCallback,
-                {
-                    dialogTitle : 'Share using:',         // Title of the native dialog
-                    url : "http://is.gd/DikVaQ",          // Url to be shared
-                    text : "Take a look at this {{url}}", // Text to be shared where possible (not in Facebook)
-                                                          // {{url}} will be replaced by given url
-                    mailSubject : "Great news for you"    // Subject of the email if users select a mail client
-                }
-            );
-            
-        });
-
-    });
-    </script>
-    <style>
-    .ui-block-a, .ui-block-b, .ui-block-c {
-        background-color: lightgray;
-        border: 1px solid black;
-        /*height: 100px;*/
-        font-weight: bold;
-        padding: 10px;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-    </style>
 </head>
 
 <body>
@@ -94,16 +63,19 @@
                 <!-- Menu items goes here..-->
             </ul>
         </div>
-
         <div data-role="header">
-            <!-- <a href="#HomePage" data-transition="flip" class="ui-btn ui-nodisc-icon ui-corner-all ui-shadow ui-icon-home ui-btn-icon-notext">Home</a> -->
+            <a href="#HomePage" data-transition="flip" class="homebtn"><IMG SRC="img/Events$Coat_of_Arms.png" width="37"></a>
+            <h1 class="AppHeader">SKN Government Events</h1>
+            <a href="#myPanel" class="ui-btn ui-corner-all mymenubtn ui-icon-bars ui-shadow ui-btn-icon-left"></a>
+        </div>
+        <!-- <div data-role="header">
             <a href="#HomePage" data-transition="flip" class="homebtn ui-btn ui-shadow ui-corner-all"> <img src="img/Events$Coat_of_Arms.png" width="20" height="20"></a>
             <h1 class="AppHeader">SKN Government Events</h1>
             <a href="#myPanel" class="ui-btn ui-nodisc-icon ui-corner-all ui-icon-bars ui-shadow ui-btn-icon-notext">Menu</a>
-        </div>
+        </div> -->
 
-        <div id="FeatListPH">
-            <div data-role="main" class="ui-content">
+        <div class="FeatListPH">
+            <div data-role="main" class="ui-contentz">
                 <!-- <h3>Featured Events</h3> -->
                 <!-- <div class="FeatPrev FeatButton ui-shadow"><img src="img/left.png"></div> -->
                 <ol class="featlist">
@@ -114,8 +86,8 @@
             </div>
         </div>
 
-        <div class="Listing">
-            <div data-role="main" class="ui-content">
+        <div class="Listing" style="float: left;">
+            <div data-role="main" class="ui-contentz">
                 <!-- <h3>Upcoming Events</h3> -->
 
                 <!-- <form class="ui-filterable">
