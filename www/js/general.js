@@ -121,7 +121,8 @@ $(document).on("pageshow","#detailspage",function(){
             	DateDisplay = EventDate;
             }
 
-			$('.EventTitle').append(title +' | '+ DateDisplay);
+			$('.EventTitle').append(title);
+			$('.EventDate').append(DateDisplay);
 			$('.EventCategory').append(Category);
 			$('.EventDetails').append(Details);
 			$('.Ministries').append(EventMins);

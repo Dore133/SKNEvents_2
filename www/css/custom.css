@@ -140,23 +140,23 @@ ul.PanelItems li {
 }
 
 .body{
-	padding: 20px;
+    padding: 20px;
 }
 
 .BioClick{
-	float: left;
+    float: left;
 }
 
 .listingitem{
-	margin: 0 auto;
-	float: left;
-	width: 100%;
+    margin: 0 auto;
+    float: left;
+    width: 100%;
 }
 
 .listingitem hr{
-	float: left;
-	width: 100%;
-	background-color: black;
+    float: left;
+    width: 100%;
+    background-color: black;
 }
 
 input.searchbox {
@@ -175,9 +175,9 @@ input.submit {
 }
 
 .Searchdiv{
-	width: 100%;
-	margin: 0 auto;
-	padding-top: 10px;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 10px;
 }
 
 #overlay {
@@ -203,16 +203,22 @@ input.submit {
 }
 
 .Details{
-	display: none;
+    display: none;
 }
 
 .LogoPanel{
-	float: left;
+    float: left;
     margin-bottom: 15px;
 }
 
+.LogoPanel img{
+    width: auto;
+    margin-left:16%; 
+    height:200px;
+}
+
 #smallover{
-	left: 30%!important;
+    left: 30%!important;
     top: 34%!important;
     width: 200px!important;
     height: 100px!important;
@@ -362,3 +368,8 @@ ul .navbarli .navbarbtn{
     width: 100%;
     display: inline;
 }*/
+
+.EventDate{
+    float: right;
+    text-align: right;
+}
