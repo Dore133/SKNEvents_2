@@ -369,7 +369,6 @@ ul .navbarli .navbarbtn{
     display: inline;
 }*/
 
-.EventDate{
-    float: right;
-    text-align: right;
+.OptionzPh{
+    display: none;
 }

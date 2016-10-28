@@ -18,6 +18,7 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>    
+    <script type="text/javascript" src="js/general.js"></script>
     <!-- End Jquery Mobile -->
     <!--<script type="text/javascript" src="js/getData.js"></script> 
     <script type="text/javascript" src="js/general.js"></script>   -->
@@ -30,7 +31,7 @@
     <!-- <script src='js/lib/jquery.min.js'></script> -->
     <script src='js/fullcalendar.min.js'></script>
     <!-- End Calendar -->
-    <title>Mendix Rest</title>
+    <title>Calendar View</title>
     <style type="text/css">
     #loadingcal {
         display: none;
@@ -59,9 +60,22 @@
 
         <div data-role="main" class="ui-content">
             <h3>Calendar View.</h3>
-        </div>
 
-        <div data-role="main" class="ui-content">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <label for="Ministries">Ministries</label>
+                <input type="radio" name="ViewBy" id="Ministries" value="Ministries">
+                <label for="Departments">Departments</label>
+                <input type="radio" name="ViewBy" id="Departments" value="Departments">
+                <label for="All">All</label>
+                <input type="radio" name="ViewBy" id="All" value="All" checked>
+            </fieldset>
+
+            <div class="OptionzPh">
+                <select name="ViewOptions" id="ViewOptions" class="ViewOptions"> 
+                    <!-- Options goes here..-->
+                </select>
+            </div>
+            
             <div id="calendarz"></div>
             <div id="testzzz"></div>
         </div>
@@ -69,7 +83,7 @@
         <div data-role="footer" class="MyFooter" data-position="fixed">
             <h1></h1>
         </div>
-        <div id="overlay"><img id="loading" src="img/loading.gif"></div>
+        <!-- <div id="overlay"><img id="loading" src="img/loading.gif"></div> -->
     </div>
     
 </body>

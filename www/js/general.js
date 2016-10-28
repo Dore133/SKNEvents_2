@@ -78,7 +78,10 @@ $(document).on("pageshow","#detailspage",function(){
 	//alert('3');
 	$.ajax({
 		url: "https://www.gov.kn/rest/wsc_getevents/?contenttype=json",
-		data: {searchtitle : EventTitle},
+		data: {
+			searchtitle : EventTitle,
+			forcalendar : true
+		},
 		xhrFields: {
 		// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
 		// This can be used to set the 'withCredentials' property.
@@ -953,6 +956,8 @@ $(document).on("pageshow","#GroupEvents",function(){
 
 $(document).on("pageshow","#CalendarView",function(){
 
+	//alert('page show');
+
 	function formatDate(date) {
 	    var d = new Date(date),
 	        month = '' + (d.getMonth() + 1),
@@ -965,105 +970,232 @@ $(document).on("pageshow","#CalendarView",function(){
 	    return [year, month, day].join('-');
 	}
 
-	$.ajax({
-		url: 'https://www.gov.kn/rest/wsc_getevents/?contenttype=json',
-		data: {forcalendar : true},
-		cache: true,
-		xhrFields: {
-		// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
-		// This can be used to set the 'withCredentials' property.
-		// Set the value to 'true' if you'd like to pass cookies to the server.
-		// If this is enabled, your server must respond with the header
-		// 'Access-Control-Allow-Credentials: true'.
-		withCredentials: true
-	},
-	}).then(function(data) {
-		// if (localStorage.EventsCal) {
-		// 	EventsCalV = JSON.parse(localStorage.EventsCal);
-		// }
-		// else{
-		// 	var totalrec = data.eventsObjects.length;
-		// 	var finishid = totalrec - 1;
+	$(document).ready(LoadCalData('https://www.gov.kn/rest/wsc_getevents/?contenttype=json'));
 
-		// 	var CalDataString = null;
-		// 	var EventsCalV = [];
-		// 	for (var i = 0; i < totalrec; i++) {
-				
-		// 		var title = data.eventsObjects[i].title,
-		// 		EventDate = formatDate(data.eventsObjects[i].startDate);
-
-		// 		if (data.eventsObjects[i].endDate != null) {
-	 //            	var EndDate = formatDate(data.eventsObjects[i].endDate);
-	 //            }
-	 //            else{
-	 //            	var EndDate = '';
-	 //            }
-
-		// 		EventsCalV.push({
-	 //                title: title,
-	 //                start: EventDate,
-	 //                end: EndDate
-	 //            });
-
-		// 	};
-
-		// 	localStorage.EventsCal = JSON.stringify(EventsCalV);
-		// }
-
-		var totalrec = data.eventsObjects.length;
-		var finishid = totalrec - 1;
-
-		var CalDataString = null;
-		var EventsCalV = [];
-		for (var i = 0; i < totalrec; i++) {
-			
-			var title = data.eventsObjects[i].title,
-			EventDate = formatDate(data.eventsObjects[i].startDate);
-
-			if (data.eventsObjects[i].endDate != null) {
-            	var EndDate = formatDate(data.eventsObjects[i].endDate);
-            }
-            else{
-            	var EndDate = '';
-            }
-
-			EventsCalV.push({
-                title: title,
-                start: EventDate,
-                end: EndDate
-            });
-
-		};
-
-		//localStorage.EventsCal = JSON.stringify(EventsCalV);
-
-		$(document).ready(function() {
-			//When Calendar is visible remove load
-	        $('#calendarz').bind("DOMSubtreeModified",function(){
-				$('#overlay').remove();
-			});
-
-	        $('#calendarz').fullCalendar({
-	            defaultDate: new Date(),
-	            header: {
-					left: 'prev,next today',
-					right: 'title'
-					//right: 'month,agendaWeek,agendaDay'
-				},
-				eventClick: function(calEvent, jsEvent, view) {
-                    $.mobile.navigate( 'details.html?Title='+calEvent.title );
-                },
-	            editable: false,
-	            eventLimit: true, // allow "more" link when too many events
-	            events: EventsCalV,
-	            eventBackgroundColor: 'black', 
-                eventTextColor: 'white'
-	        });
-	        
-	    });
+	$("input[name='ViewBy']").bind( "change", function(event, ui) {
 		
+		var Category = $(this).val();
+		//alert(Category);
+		if (Category == 'Departments') {
+			var DropDownUrl = 'https://www.gov.kn/rest/wsc_getdepartments/?contenttype=json';
+				LoadDropDown(DropDownUrl,Category);
+		}
+		else if (Category == 'Ministries') {
+			var DropDownUrl = 'https://www.gov.kn/rest/wsc_getministries/?contenttype=json';
+				LoadDropDown(DropDownUrl,Category);
+		}
+		else{
+			var UrlData = 'https://www.gov.kn/rest/wsc_getevents/?contenttype=json';
+				LoadCalData(UrlData);
+		}
+
+		if (Category == 'All') {
+			$('.OptionzPh').hide();
+		}
 
 	});
+
+
+	function LoadDropDown(DropDownUrl,Category){
+		var html = '<option value="" selected>Select '+Category+'</option>';
+
+		$(".ViewOptions").empty();
+		
+		if(Category == 'Ministries' && $("#ViewOptions").hasClass('Departments')){
+			$('select.ViewOptions').removeClass('Departments');
+		}
+		else if(Category == 'Departments' && $("#ViewOptions").hasClass('Ministries')){
+			$('select.ViewOptions').removeClass('Ministries');
+		}
+
+		$('select.ViewOptions').addClass(Category);
+
+		$.ajax({
+			url: DropDownUrl,
+			data: {forcalendar : true},
+			cache: true,
+			xhrFields: {
+				// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+				// This can be used to set the 'withCredentials' property.
+				// Set the value to 'true' if you'd like to pass cookies to the server.
+				// If this is enabled, your server must respond with the header
+				// 'Access-Control-Allow-Credentials: true'.
+				withCredentials: true
+			},
+		}).then(function(data) {
+			if (Category == 'Ministries') {
+				var totalrec = data.ministries.length;
+			}
+			else{
+				var totalrec = data.departments.length;
+			}
+
+            for (var i = 0; i < totalrec; i++) {
+            	if (Category == 'Departments') {
+					var title = data.departments[i].name;
+				}
+				else{
+					var title = data.ministries[i].name;
+				}
+
+	            html += '<option value="'+title+'">'+title+'</option>';
+
+	        };
+
+	        $('span.ViewOptions').text('Select '+Category);
+	        $('select.ViewOptions').html( html );
+		});
+
+		$('.OptionzPh').fadeIn();
+
+	}
+
+	$("select.ViewOptions").bind( "change", function(event, ui) {
+		//alert('option chose');
+		var Category = $(this).val(),
+			UrlData = '';
+
+		if(Category != ''){
+			if ($(this).hasClass('Ministries')) {
+				UrlData = 'https://www.gov.kn/rest/wsc_geteventsforministry/?contenttype=json&ministry='+Category;
+			}
+			else {
+				UrlData = 'https://www.gov.kn/rest/wsc_geteventsfordepartment/?contenttype=json&department='+Category;
+			}
+		}
+		
+		LoadCalData(UrlData);
+		
+	});
+
+	$(".testcal").on("tap",function(){
+		LoadCalData('https://www.gov.kn/rest/wsc_geteventsforministry/?contenttype=json&ministry=Ministry of Community Development, Gender Affairs and Social Services');
+	});
+
+	function isEmpty( el ){
+		return !$.trim(el.html())
+	}
+	
+
+	function LoadCalData(UrlData){
+		console.log('loading calendar data');
+
+		//$('#calendarz').empty();
+		
+		$.ajax({
+			url: UrlData,
+			data: {forcalendar : true},
+			cache: true,
+			xhrFields: {
+			// The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+			// This can be used to set the 'withCredentials' property.
+			// Set the value to 'true' if you'd like to pass cookies to the server.
+			// If this is enabled, your server must respond with the header
+			// 'Access-Control-Allow-Credentials: true'.
+			withCredentials: true
+		},
+		}).then(function(data) {
+			// if (localStorage.EventsCal) {
+			// 	EventsCalV = JSON.parse(localStorage.EventsCal);
+			// }
+			// else{
+			// 	var totalrec = data.eventsObjects.length;
+			// 	var finishid = totalrec - 1;
+
+			// 	var CalDataString = null;
+			// 	var EventsCalV = [];
+			// 	for (var i = 0; i < totalrec; i++) {
+					
+			// 		var title = data.eventsObjects[i].title,
+			// 		EventDate = formatDate(data.eventsObjects[i].startDate);
+
+			// 		if (data.eventsObjects[i].endDate != null) {
+		 //            	var EndDate = formatDate(data.eventsObjects[i].endDate);
+		 //            }
+		 //            else{
+		 //            	var EndDate = '';
+		 //            }
+
+			// 		EventsCalV.push({
+		 //                title: title,
+		 //                start: EventDate,
+		 //                end: EndDate
+		 //            });
+
+			// 	};
+
+			// 	localStorage.EventsCal = JSON.stringify(EventsCalV);
+			// }
+
+			var totalrec = data.eventsObjects.length;
+			var finishid = totalrec - 1;
+
+			var CalDataString = null;
+			var EventsCalV = [];
+			for (var i = 0; i < totalrec; i++) {
+				
+				var title = data.eventsObjects[i].title,
+				EventDate = formatDate(data.eventsObjects[i].startDate);
+
+				if (data.eventsObjects[i].endDate != null) {
+	            	var EndDate = formatDate(data.eventsObjects[i].endDate);
+	            }
+	            else{
+	            	var EndDate = '';
+	            }
+
+				EventsCalV.push({
+	                title: title,
+	                start: EventDate,
+	                end: EndDate
+	            });
+
+			};
+
+			//localStorage.EventsCal = JSON.stringify(EventsCalV);
+
+			$(document).ready(function() {
+				//When Calendar is visible remove load
+		        $('#calendarz').bind("DOMSubtreeModified",function(){
+					
+				});
+
+		        if (isEmpty($('#calendarz'))) {
+		        	console.log('Rendering events');
+					$('#calendarz').fullCalendar({
+			            defaultDate: new Date(),
+			            header: {
+							left: 'prev,next today',
+							right: 'title'
+							//right: 'month,agendaWeek,agendaDay'
+						},
+						eventClick: function(calEvent, jsEvent, view) {
+		                    $.mobile.navigate( 'details.html?Title='+calEvent.title );
+		                },
+			            editable: false,
+			            eventLimit: true, // allow "more" link when too many events
+			            events: EventsCalV,
+			            eventBackgroundColor: 'black', 
+		                eventTextColor: 'white',
+		                cache: true,
+		                eventAfterAllRender: function(view) {
+							console.log('All events should show now');
+							$('#overlay').remove();
+						}
+			        });
+				}
+				else{
+					console.log('Rendering new events');
+					$('#calendarz').fullCalendar( 'removeEvents' );
+			        $('#calendarz').fullCalendar( 'addEventSource', EventsCalV );
+				}
+		        //$('#calendarz').fadeIn();
+		        
+		    });
+			
+
+		});
+	}
     
 });
 
