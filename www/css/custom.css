@@ -140,23 +140,23 @@ ul.PanelItems li {
 }
 
 .body{
-    padding: 20px;
+	padding: 20px;
 }
 
 .BioClick{
-    float: left;
+	float: left;
 }
 
 .listingitem{
-    margin: 0 auto;
-    float: left;
-    width: 100%;
+	margin: 0 auto;
+	float: left;
+	width: 100%;
 }
 
 .listingitem hr{
-    float: left;
-    width: 100%;
-    background-color: black;
+	float: left;
+	width: 100%;
+	background-color: black;
 }
 
 input.searchbox {
@@ -175,9 +175,9 @@ input.submit {
 }
 
 .Searchdiv{
-    width: 100%;
-    margin: 0 auto;
-    padding-top: 10px;
+	width: 100%;
+	margin: 0 auto;
+	padding-top: 10px;
 }
 
 #overlay {
@@ -187,6 +187,7 @@ input.submit {
     /* bottom: 0; */
     width: 25%;
     height: 10%;
+    z-index: 9999;
     /* right: 0; */
     background: #000;
     border-radius: 10px;
@@ -203,11 +204,11 @@ input.submit {
 }
 
 .Details{
-    display: none;
+	display: none;
 }
 
 .LogoPanel{
-    float: left;
+	float: left;
     margin-bottom: 15px;
 }
 
@@ -218,7 +219,7 @@ input.submit {
 }
 
 #smallover{
-    left: 30%!important;
+	left: 30%!important;
     top: 34%!important;
     width: 200px!important;
     height: 100px!important;
@@ -371,4 +372,8 @@ ul .navbarli .navbarbtn{
 
 .OptionzPh{
     display: none;
+}
+
+.EventDetails img {
+    max-width: 100%;
 }

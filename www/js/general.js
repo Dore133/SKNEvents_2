@@ -75,6 +75,13 @@ $(document).on("pageshow","#detailspage",function(){
 	var EventTitle = getQueryVariable('Title'),
 		EventTitle = decodeURI(EventTitle);
 
+	function addZero(i) {
+	    if (i < 10) {
+	        i = "0" + i;
+	    }
+	    return i;
+	}
+
 	//alert('3');
 	$.ajax({
 		url: "https://www.gov.kn/rest/wsc_getevents/?contenttype=json",
@@ -98,13 +105,20 @@ $(document).on("pageshow","#detailspage",function(){
 		for (var i = 0; i < totalrec; i++) {
 			var title = data.eventsObjects[i].title,
 			EventDate = new Date(data.eventsObjects[i].startDate),
+			//h = addZero(EventDate.getHours()),
+	    	//m = addZero(EventDate.getMinutes()),
+			//EventTimeStart = h + ':' + m,
+			EventTimeStart = EventDate.toLocaleTimeString(),
 			EventDate = EventDate.toDateString(),
+			StartTimeDisplay = EventDate.concat(' ',EventTimeStart),
 			Details = data.eventsObjects[i].pageContent,
 			Category = data.eventsObjects[i].eventCategories.categoryName,
 			EventImg = data.eventsObjects[i].flyerFull,
 			Base64Img = data.eventsObjects[i].base64,
 			EventMins = data.eventsObjects[i].eventMinistries.name,
-			EventDeps = data.eventsObjects[i].eventDepartments.name; 
+			EventDeps = data.eventsObjects[i].eventDepartments.name,
+			EventLocation = data.eventsObjects[i].location;
+			
 
 			if(Base64Img != ''){
 				//EventHasImg = 'data:image/jpeg;base64,'+Base64Img;
@@ -116,16 +130,35 @@ $(document).on("pageshow","#detailspage",function(){
 
 			if (data.eventsObjects[i].endDate != null) {
             	var EndDate = new Date(data.eventsObjects[i].endDate),
+	            	//h = addZero(EndDate.getHours()),
+		    		//m = addZero(EndDate.getMinutes()),
+            		//EventTimeEnd = h + ':' + m,
+            		EventTimeEnd = EndDate.toLocaleTimeString(),
             		EndDate = EndDate.toDateString(),
             		Blank = ' - ',
-            		DateDisplay = EventDate.concat(Blank,EndDate);
+            		EndTimeDisplay = EventTimeStart.concat(Blank,EventTimeEnd),
+            		EndDateDisplay = EndDate.concat(' ',EventTimeEnd);
+
+            		$('.EventDateTo').append(EndDateDisplay);
             }
             else{
             	DateDisplay = EventDate;
+            	TimeDisplay = EventTimeStart;
+            	$('.EventDateTo').hide();
             }
 
 			$('.EventTitle').append(title);
-			$('.EventDate').append(DateDisplay);
+			$('.EventDateFrom').append(StartTimeDisplay);
+
+			//$('.EventTime').append(TimeDisplay);
+			
+			if(EventLocation != ''){
+				$('.EventLocation').append(EventLocation);
+			}
+			else{
+				$('.EventLocation').hide();
+			}
+			
 			$('.EventCategory').append(Category);
 			$('.EventDetails').append(Details);
 			$('.Ministries').append(EventMins);
@@ -1079,7 +1112,7 @@ $(document).on("pageshow","#CalendarView",function(){
 
 	function LoadCalData(UrlData){
 		console.log('loading calendar data');
-
+		$(document).ready(loading);
 		//$('#calendarz').empty();
 		
 		$.ajax({
@@ -1153,6 +1186,7 @@ $(document).on("pageshow","#CalendarView",function(){
 			};
 
 			//localStorage.EventsCal = JSON.stringify(EventsCalV);
+			
 
 			$(document).ready(function() {
 				//When Calendar is visible remove load
