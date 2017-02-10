@@ -493,9 +493,9 @@ $(document).on("pageshow","#HomePage",function(){
 	        },
 	    }).then(function(data) {
 	        var totalrec = 5; //data.eventsObjects.length;
-	        /*if(totalrec > 10){
-	            var totalrec = 10;
-	        }*/
+	        if(data.eventsObjects.length < 5){
+	            var totalrec = data.eventsObjects.length;
+	        }
 	        var finishid = totalrec - 1;
 	        for (var i = 0; i < totalrec; i++) {
 	            var title = data.eventsObjects[i].title,
